@@ -977,6 +977,77 @@ footer {
   transform: translateX(-50%) translateY(0);
 }
 
+/* === 作品詳細 オーダーCTAボタン === */
+.work-order-btn {
+  display: block;
+  text-align: center;
+  margin: 1.5rem 0;
+  padding: 0.9rem 1.5rem;
+  background: linear-gradient(135deg, var(--rose), var(--gold));
+  color: #fff;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 16px rgba(200, 105, 138, 0.3);
+}
+.work-order-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
+/* === 作品一覧 オーダーCTAバナー === */
+.works-order-banner {
+  background: linear-gradient(135deg, var(--rose-pale), #fff8f0);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 3.5rem 2rem;
+  text-align: center;
+}
+.works-order-banner-inner {
+  max-width: 520px;
+  margin: 0 auto;
+}
+.works-order-banner-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+.works-order-banner-title {
+  font-family: 'Cormorant Garamond', 'Noto Serif JP', serif;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  font-weight: 600;
+  color: var(--rose);
+  margin-bottom: 0.6rem;
+}
+.works-order-banner-text {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.8;
+  margin-bottom: 1.6rem;
+}
+.works-order-banner-btn {
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  background: linear-gradient(135deg, var(--rose), var(--gold));
+  color: #fff;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: opacity 0.2s, transform 0.2s;
+  box-shadow: 0 4px 18px rgba(200, 105, 138, 0.3);
+}
+.works-order-banner-btn:hover {
+  opacity: 0.88;
+  transform: translateY(-2px);
+}
+
 .work-detail-no-shop {
   color: var(--text-muted);
   font-size: 0.85rem;

@@ -57,6 +57,10 @@ function renderWork(w) {
           ${SITE_CONFIG.sns.mercari ? `<a href="${esc(SITE_CONFIG.sns.mercari)}" target="_blank" rel="noopener" class="shop-btn-detail">🛍 メルカリで購入する</a>` : ''}
           ${SITE_CONFIG.sns.yahoo ? `<a href="${esc(SITE_CONFIG.sns.yahoo)}" target="_blank" rel="noopener" class="shop-btn-detail">🏷 ヤフーフリマで購入する</a>` : ''}
         </div>
+        <!-- オーダーCTAボタン -->
+        <a href="order.html" class="work-order-btn">
+          💌 この作品と同じようなものをオーダーする
+        </a>
         <div class="share-wrap">
           <p class="share-label">この作品をシェア</p>
           <div class="share-buttons">
