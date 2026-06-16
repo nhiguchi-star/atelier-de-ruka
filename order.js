@@ -2,7 +2,7 @@
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-let selectedRefFile = null;
+let selectedRefFiles = [];
 
 document.addEventListener('DOMContentLoaded', () => {
   renderSnsLinks();
@@ -22,31 +22,38 @@ function setupImageUpload() {
   zone.addEventListener('click', () => input.click());
 
   input.addEventListener('change', e => {
-    const file = e.target.files[0];
-    if (file) handleRefFile(file, preview, main, sub, zone);
+    handleRefFiles([...e.target.files], preview, main, sub, zone);
   });
 
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('has-file'); });
   zone.addEventListener('dragleave', e => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('has-file'); });
   zone.addEventListener('drop', e => {
     e.preventDefault();
-    const file = e.dataTransfer.files[0];
-    if (file && file.type.startsWith('image/')) {
-      handleRefFile(file, preview, main, sub, zone);
-    }
+    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
+    if (files.length) handleRefFiles(files, preview, main, sub, zone);
   });
 }
 
-function handleRefFile(file, preview, main, sub, zone) {
-  selectedRefFile = file;
+function handleRefFiles(files, preview, main, sub, zone) {
+  if (files.length > 5) {
+    alert('参考画像は5枚までです。最初の5枚を使用します。');
+    files = files.slice(0, 5);
+  }
+  selectedRefFiles = files;
   zone.classList.add('has-file');
-  main.textContent = `✓ ${file.name}`;
-  sub.textContent = `${(file.size / 1024).toFixed(0)} KB`;
-  const reader = new FileReader();
-  reader.onload = e => {
-    preview.innerHTML = `<img src="${e.target.result}" alt="参考画像プレビュー">`;
-  };
-  reader.readAsDataURL(file);
+  main.textContent = `✓ ${files.length}枚選択済み`;
+  sub.textContent = files.map(f => f.name).join('、');
+  preview.innerHTML = '';
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.alt = file.name;
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
 }
 
 // 参考画像をSupabase Storageにアップロードしてpublic URLを返す
@@ -102,23 +109,27 @@ function setupForm() {
     const needsDirection = !keychainTypes.includes(product);
 
     // 参考画像は必須
-    if (!selectedRefFile) {
+    if (!selectedRefFiles.length) {
       alert('参考画像を選択してください（必須）');
       submitBtn.disabled = false;
       return;
     }
 
-    // 参考画像のアップロード
-    let imageUrl = null;
-    submitBtn.textContent = '画像をアップロード中...';
-    try {
-      imageUrl = await uploadRefImage(selectedRefFile);
-    } catch (err) {
-      console.error('画像アップロード失敗:', err);
-      alert('画像のアップロードに失敗しました。もう一度お試しください。');
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'メールで送信する';
-      return;
+    // 参考画像をすべてアップロード
+    const imageUrls = [];
+    submitBtn.textContent = `画像をアップロード中... (0/${selectedRefFiles.length})`;
+    for (let i = 0; i < selectedRefFiles.length; i++) {
+      try {
+        const url = await uploadRefImage(selectedRefFiles[i]);
+        imageUrls.push(url);
+        submitBtn.textContent = `画像をアップロード中... (${i + 1}/${selectedRefFiles.length})`;
+      } catch (err) {
+        console.error('画像アップロード失敗:', err);
+        alert('画像のアップロードに失敗しました。もう一度お試しください。');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'メールで送信する';
+        return;
+      }
     }
 
     submitBtn.textContent = 'メールを準備中...';
@@ -142,7 +153,7 @@ function setupForm() {
       '■ その他・備考：',
       notes || '（なし）',
       '',
-      imageUrl ? `■ 参考画像：${imageUrl}` : null,
+      imageUrls.length ? imageUrls.map((url, i) => `■ 参考画像${imageUrls.length > 1 ? i + 1 : ''}：${url}`).join('\n') : null,
       '━━━━━━━━━━━━━━━━━',
     ].filter(line => line !== null).join('\n');
 

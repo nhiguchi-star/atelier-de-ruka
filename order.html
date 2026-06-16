@@ -353,11 +353,16 @@
       color: var(--text-muted);
       opacity: 0.7;
     }
-    #js-order-img-preview img {
-      max-width: 200px;
-      max-height: 200px;
-      border-radius: 8px;
+    .img-preview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
       margin-top: 0.75rem;
+    }
+    .img-preview-grid img {
+      width: 100px;
+      height: 100px;
+      border-radius: 8px;
       border: 1px solid var(--border);
       object-fit: cover;
     }
@@ -648,15 +653,15 @@
           <!-- 参考画像 -->
           <div class="form-section">
             <p class="form-section-title">参考画像<span class="required" style="font-size:0.72rem; color:var(--rose); margin-left:0.3rem; font-family:'Noto Sans JP',sans-serif;">※必須</span></p>
-            <p class="form-hint">イメージに近い作品・参考にしたいデザインなどをアップロードしてください</p>
+            <p class="form-hint">イメージに近い作品・参考にしたいデザインなどをアップロードしてください（最大5枚）</p>
             <div class="img-upload-zone" id="js-order-img-zone">
-              <input type="file" id="f-ref-image" accept="image/*" style="display:none;">
+              <input type="file" id="f-ref-image" accept="image/*" multiple style="display:none;">
               <div class="img-upload-content">
                 <p class="img-upload-main" id="js-img-main">📎 クリックして画像を選択</p>
-                <p class="img-upload-sub" id="js-img-sub">JPG・PNG・HEIC など1枚まで</p>
+                <p class="img-upload-sub" id="js-img-sub">JPG・PNG・HEIC など・最大5枚</p>
               </div>
-              <div id="js-order-img-preview"></div>
             </div>
+            <div id="js-order-img-preview" class="img-preview-grid"></div>
           </div>
 
           <!-- その他・備考 -->
