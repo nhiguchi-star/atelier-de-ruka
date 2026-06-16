@@ -909,6 +909,7 @@ footer {
 
 .share-buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.6rem;
 }
 
@@ -935,6 +936,46 @@ footer {
   color: #fff;
 }
 .share-btn-line:hover { background: #05b34c; }
+
+.share-btn-instagram {
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.share-btn-instagram:hover { opacity: 0.88; }
+
+.share-btn-tiktok {
+  background: #010101;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+.share-btn-tiktok:hover { background: #2a2a2a; }
+
+/* URLコピートースト通知 */
+.copy-toast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: rgba(60, 40, 30, 0.92);
+  color: #fff;
+  padding: 0.7rem 1.2rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 300;
+}
+.copy-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
 
 .work-detail-no-shop {
   color: var(--text-muted);

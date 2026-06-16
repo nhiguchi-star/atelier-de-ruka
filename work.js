@@ -62,6 +62,8 @@ function renderWork(w) {
           <div class="share-buttons">
             <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(w.title + ' — Atelier de Ruka')}&url=${encodeURIComponent(location.href)}" target="_blank" rel="noopener" class="share-btn share-btn-x">𝕏 でシェア</a>
             <a href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(location.href)}" target="_blank" rel="noopener" class="share-btn share-btn-line">LINE でシェア</a>
+            <button onclick="shareToApp('Instagram')" class="share-btn share-btn-instagram">📸 Instagram</button>
+            <button onclick="shareToApp('TikTok')" class="share-btn share-btn-tiktok">🎵 TikTok</button>
           </div>
         </div>
       </div>
@@ -86,6 +88,35 @@ function renderSnsLinks() {
         <span>${item.icon}</span>${item.label}
       </a>
     `).join('');
+}
+
+// Instagram / TikTok シェア（システムシェアシート or URLコピー）
+function shareToApp(platform) {
+  const url = location.href;
+  const title = document.title;
+  if (navigator.share) {
+    navigator.share({ title, url }).catch(() => {});
+  } else {
+    navigator.clipboard.writeText(url).then(() => {
+      showCopyToast(platform);
+    }).catch(() => {
+      prompt('URLをコピーして' + platform + 'に貼り付けてください', url);
+    });
+  }
+}
+
+// コピー完了トースト表示
+function showCopyToast(platform) {
+  let toast = document.getElementById('js-copy-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'js-copy-toast';
+    toast.className = 'copy-toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = 'URLをコピーしました！' + platform + 'に貼り付けてシェアしてください';
+  toast.classList.add('visible');
+  setTimeout(() => toast.classList.remove('visible'), 3000);
 }
 
 // XSS対策
