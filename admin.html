@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理ページ — Handmade Works</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:          #121212;
+      --bg-card:     #1e1e1e;
+      --bg-elevated: #2a2a2a;
+      --text:        #e0e0e0;
+      --text-muted:  #9a9a9a;
+      --accent:      #e8a598;
+      --border:      #2e2e2e;
+      --error:       #f28b82;
+      --success:     #81c784;
+    }
+
+    body {
+      font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header span { font-weight: 700; color: var(--accent); }
+    header a { color: var(--text-muted); font-size: 0.85rem; text-decoration: none; }
+    header a:hover { color: var(--accent); }
+
+    .page {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* フォームカード */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.75rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    label .required {
+      color: var(--accent);
+      margin-left: 0.2rem;
+    }
+
+    input, textarea, select {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.875rem;
+      padding: 0.55rem 0.75rem;
+      transition: border-color 0.2s;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    textarea { resize: vertical; min-height: 80px; }
+
+    select option { background: var(--bg-elevated); }
+
+    /* ドロップゾーン */
+    .drop-zone {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 2rem 1rem;
+      cursor: pointer;
+      text-align: center;
+      background: var(--bg-elevated);
+      transition: border-color 0.18s, background 0.18s;
+      margin-top: 0.35rem;
+    }
+
+    .drop-zone:hover { border-color: var(--accent); }
+
+    .drop-zone.drag-over {
+      border-color: var(--accent);
+      background: rgba(232, 165, 152, 0.1);
+    }
+
+    .drop-zone.has-file { border-color: var(--success); border-style: solid; }
+
+    .drop-zone-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+
+    .drop-zone-main {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin: 0 0 0.2rem;
+    }
+
+    .drop-zone-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.65;
+      margin: 0;
+    }
+
+    /* 画像プレビュー */
+    .img-preview {
+      width: 100%;
+      aspect-ratio: 3/2;
+      border-radius: 6px;
+      overflow: hidden;
+      background: var(--bg-elevated);
+      margin-top: 0.5rem;
+      display: none;
+    }
+
+    .img-preview:has(img) { display: block; }
+
+    .img-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ボタン */
+    .btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: 6px;
+      border: none;
+      font-family: inherit;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #1a1a1a;
+    }
+
+    .btn-primary:hover { background: #f2b8ae; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .btn-danger {
+      background: rgba(242,139,130,.15);
+      color: var(--error);
+      border: 1px solid rgba(242,139,130,.3);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-danger:hover { background: rgba(242,139,130,.25); }
+
+    .btn-ghost {
+      background: var(--bg-elevated);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .btn-ghost:hover { color: var(--text); }
+
+    .form-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 1.25rem;
+    }
+
+    /* トースト通知 */
+    #js-toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: all 0.25s;
+      pointer-events: none;
+      z-index: 999;
+    }
+
+    #js-toast.show { opacity: 1; transform: translateY(0); }
+    #js-toast.success { background: rgba(129,199,132,.15); color: var(--success); border: 1px solid rgba(129,199,132,.4); }
+    #js-toast.error   { background: rgba(242,139,130,.15); color: var(--error);   border: 1px solid rgba(242,139,130,.4); }
+
+    /* 作品一覧 */
+    .works-list-header {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+
+    #js-works-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+    .work-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      display: grid;
+      grid-template-columns: 64px 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .work-thumb {
+      width: 64px;
+      height: 64px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: var(--bg-elevated);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .work-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+    .work-info-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .work-info-meta {
+      font-size: 0.775rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-badge {
+      color: var(--accent);
+    }
+
+    .meta-link {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.775rem;
+    }
+
+    .meta-link:hover { text-decoration: underline; }
+
+    .meta-no-link {
+      color: var(--text-muted);
+      font-size: 0.775rem;
+      font-style: italic;
+    }
+
+    label small {
+      font-weight: 400;
+      color: var(--text-muted);
+    }
+
+    .work-actions { display: flex; gap: 0.5rem; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-muted);
+      background: var(--bg-card);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+
+    @media (max-width: 560px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .work-item { grid-template-columns: 48px 1fr; }
+      .work-actions { grid-column: 1 / -1; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span>管理ページ</span>
+    <a href="index.html">← 作品ページへ戻る</a>
+  </header>
+
+  <div class="page">
+
+    <!-- 作品追加フォーム -->
+    <div class="card">
+      <p class="card-title">新しい作品を追加</p>
+      <form id="js-add-form">
+        <div class="form-grid">
+
+          <div class="form-group full">
+            <label>タイトル <span class="required">*</span></label>
+            <input type="text" id="f-title" placeholder="例：フラワーピアス" required>
+          </div>
+
+          <div class="form-group">
+            <label>カテゴリ</label>
+            <select id="f-category-select">
+              <option value="">カテゴリなし</option>
+              <option value="__new__">＋ 新しいカテゴリを追加</option>
+            </select>
+            <input type="text" id="f-category-new" placeholder="新しいカテゴリ名を入力" style="display:none;margin-top:0.35rem;">
+          </div>
+
+          <div class="form-group">
+            <label>価格（円）</label>
+            <input type="number" id="f-price" placeholder="例：1500" min="0">
+          </div>
+
+          <div class="form-group full">
+            <label>説明文</label>
+            <textarea id="f-description" placeholder="素材・サイズ・こだわりポイントなど"></textarea>
+          </div>
+
+          <div class="form-group full">
+            <label>画像</label>
+            <div id="js-drop-zone" class="drop-zone">
+              <input type="file" id="f-image-file" accept="image/*" hidden>
+              <div class="drop-zone-icon">🌹</div>
+              <p class="drop-zone-main">ここにドラッグ＆ドロップ</p>
+              <p class="drop-zone-sub">またはクリックしてファイルを選択</p>
+            </div>
+            <div class="img-preview" id="js-img-preview"></div>
+          </div>
+
+          <div class="form-group">
+            <label>メルカリURL <small>（任意）</small></label>
+            <input type="url" id="f-mercari-url" placeholder="https://jp.mercari.com/item/...">
+          </div>
+          <div class="form-group">
+            <label>ヤフーフリマURL <small>（任意）</small></label>
+            <input type="url" id="f-yahoo-url" placeholder="https://paypayfleamarket.yahoo.co.jp/item/...">
+          </div>
+
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="js-submit-btn">追加する</button>
+          <button type="reset" class="btn btn-ghost">リセット</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 作品一覧 -->
+    <p class="works-list-header">登録済みの作品 <span id="js-works-count" style="color:var(--text-muted);font-size:0.85rem;font-weight:400;"></span></p>
+    <div id="js-works-list">
+      <div class="empty-state">読み込み中...</div>
+    </div>
+
+  </div>
+
+  <div id="js-toast"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
