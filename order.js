@@ -94,19 +94,50 @@ function setupForm() {
     const notes      = document.getElementById('f-notes').value.trim();
     const partsOther = document.getElementById('f-parts-other').value.trim();
 
-    const styles = [...document.querySelectorAll('#f-style-group input:checked')]
-      .map(el => el.value).join('、') || '指定なし';
-    const partsAmount = document.querySelector('input[name="parts-amount"]:checked')?.value || '指定なし';
-    const parts = [...document.querySelectorAll('#f-parts-group input:checked')].map(el => el.value);
-    if (partsOther) parts.push(partsOther);
-    const partsText = parts.join('、') || '指定なし';
-    const product   = document.querySelector('input[name="product"]:checked')?.value || '指定なし';
-    const direction = document.querySelector('input[name="direction"]:checked')?.value || '指定なし';
-    const shops = [...document.querySelectorAll('#f-shop-group input:checked')]
-      .map(el => el.value).join('、') || '指定なし';
+    const styleChecked = [...document.querySelectorAll('#f-style-group input:checked')];
+    const styles = styleChecked.map(el => el.value).join('、');
+    const partsAmount = document.querySelector('input[name="parts-amount"]:checked')?.value || '';
+    const partsChecked = [...document.querySelectorAll('#f-parts-group input:checked')].map(el => el.value);
+    if (partsOther) partsChecked.push(partsOther);
+    const partsText = partsChecked.join('、');
+    const product   = document.querySelector('input[name="product"]:checked')?.value || '';
+    const direction = document.querySelector('input[name="direction"]:checked')?.value || '';
+    const shop = document.querySelector('input[name="shop"]:checked')?.value || '';
 
     const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
     const needsDirection = !keychainTypes.includes(product);
+
+    // 全項目必須チェック
+    if (!styleChecked.length) {
+      alert('②デザイン系統を1つ以上選択してください');
+      submitBtn.disabled = false;
+      return;
+    }
+    if (!partsAmount) {
+      alert('③パーツの量を選択してください');
+      submitBtn.disabled = false;
+      return;
+    }
+    if (!partsText) {
+      alert('④希望パーツを1つ以上選択してください（チェックボックスまたは自由記入）');
+      submitBtn.disabled = false;
+      return;
+    }
+    if (!product) {
+      alert('⑤商品の種類を選択してください');
+      submitBtn.disabled = false;
+      return;
+    }
+    if (needsDirection && !direction) {
+      alert('⑥向きを選択してください');
+      submitBtn.disabled = false;
+      return;
+    }
+    if (!shop) {
+      alert('購入を希望する販売サイトを選択してください');
+      submitBtn.disabled = false;
+      return;
+    }
 
     // 参考画像は必須
     if (!selectedRefFiles.length) {
@@ -148,7 +179,7 @@ function setupForm() {
       `■ ④ 希望パーツ：${partsText}`,
       `■ ⑤ 商品の種類：${product}`,
       needsDirection ? `■ ⑥ 向き：${direction}` : null,
-      `■ 購入希望サイト：${shops}`,
+      `■ 購入希望サイト：${shop}`,
       '━━━━━━━━━━━━━━━━━',
       '■ その他・備考：',
       notes || '（なし）',

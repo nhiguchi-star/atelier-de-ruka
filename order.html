@@ -511,9 +511,11 @@
       <div class="order-card">
         <form id="js-order-form">
 
+          <p style="font-size:0.78rem; color:var(--rose); margin-bottom:1.5rem; text-align:right; letter-spacing:0.04em;">※ 全ての項目が必須です</p>
+
           <!-- 連絡先 -->
           <div class="form-section">
-            <p class="form-section-title">連絡先</p>
+            <p class="form-section-title">連絡先 <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="form-row">
               <div class="form-group">
                 <label class="form-label" for="f-name">お名前<span class="required">※必須</span></label>
@@ -528,16 +530,16 @@
 
           <!-- ① ホイップの色 -->
           <div class="form-section">
-            <p class="form-section-title"><span class="step-badge">1</span>ホイップの色</p>
+            <p class="form-section-title"><span class="step-badge">1</span>ホイップの色 <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="form-group">
-              <input class="form-input" type="text" id="f-color"
+              <input class="form-input" type="text" id="f-color" required
                 placeholder="例：白、ピンク、白×ピンクのグラデーション など">
             </div>
           </div>
 
           <!-- ② デザイン系統 -->
           <div class="form-section">
-            <p class="form-section-title"><span class="step-badge">2</span>デザイン系統（複数選択OK）</p>
+            <p class="form-section-title"><span class="step-badge">2</span>デザイン系統（複数選択OK） <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="check-group" id="f-style-group">
               <label class="check-label"><input type="checkbox" value="かっこいい系">かっこいい系</label>
               <label class="check-label"><input type="checkbox" value="キレイ系">キレイ系</label>
@@ -549,16 +551,16 @@
 
           <!-- ③ パーツ量 -->
           <div class="form-section">
-            <p class="form-section-title"><span class="step-badge">3</span>パーツの量</p>
+            <p class="form-section-title"><span class="step-badge">3</span>パーツの量 <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="radio-group">
-              <label class="radio-label"><input type="radio" name="parts-amount" value="パーツ少なめシンプル">パーツ少なめシンプル</label>
+              <label class="radio-label"><input type="radio" name="parts-amount" value="パーツ少なめシンプル" required>パーツ少なめシンプル</label>
               <label class="radio-label"><input type="radio" name="parts-amount" value="パーツゴテゴテ派手">パーツゴテゴテ派手</label>
             </div>
           </div>
 
           <!-- ④ 希望パーツ -->
           <div class="form-section">
-            <p class="form-section-title"><span class="step-badge">4</span>希望パーツ（複数選択OK）</p>
+            <p class="form-section-title"><span class="step-badge">4</span>希望パーツ（複数選択OK） <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="check-group" id="f-parts-group" style="margin-bottom:0.75rem;">
               <label class="check-label"><input type="checkbox" value="クロスチャーム">クロスチャーム</label>
               <label class="check-label"><input type="checkbox" value="バラ">バラ</label>
@@ -576,10 +578,10 @@
 
           <!-- ⑤ 商品の種類 -->
           <div class="form-section">
-            <p class="form-section-title"><span class="step-badge">5</span>商品の種類</p>
+            <p class="form-section-title"><span class="step-badge">5</span>商品の種類 <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="product-group" id="f-product-group">
               <label class="product-label">
-                <input type="radio" name="product" value="トレカケース（B8）">
+                <input type="radio" name="product" value="トレカケース（B8）" required>
                 <span class="product-name">トレカケース（B8）</span>
                 <span class="product-price">¥1,200〜</span>
               </label>
@@ -633,7 +635,7 @@
 
           <!-- ⑥ 向き（キーホルダー以外のみ表示） -->
           <div class="form-section" id="f-direction-section">
-            <p class="form-section-title"><span class="step-badge">6</span>向き</p>
+            <p class="form-section-title"><span class="step-badge">6</span>向き <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="radio-group">
               <label class="radio-label"><input type="radio" name="direction" value="縦">縦</label>
               <label class="radio-label"><input type="radio" name="direction" value="横">横</label>
@@ -643,10 +645,10 @@
 
           <!-- 販売希望サイト -->
           <div class="form-section">
-            <p class="form-section-title">購入を希望する販売サイト（複数選択OK）</p>
-            <div class="check-group" id="f-shop-group">
-              <label class="check-label"><input type="checkbox" value="メルカリ">🛍 メルカリ</label>
-              <label class="check-label"><input type="checkbox" value="ヤフーフリマ">🏷 ヤフーフリマ</label>
+            <p class="form-section-title">購入を希望する販売サイト <span class="required" style="font-size:0.7rem;">※必須</span></p>
+            <div class="radio-group" id="f-shop-group">
+              <label class="radio-label"><input type="radio" name="shop" value="メルカリ" required>🛍 メルカリ</label>
+              <label class="radio-label"><input type="radio" name="shop" value="ヤフーフリマ">🏷 ヤフーフリマ</label>
             </div>
           </div>
 
@@ -666,10 +668,10 @@
 
           <!-- その他・備考 -->
           <div class="form-section">
-            <p class="form-section-title">その他・備考</p>
+            <p class="form-section-title">その他・備考 <span class="required" style="font-size:0.7rem;">※必須</span></p>
             <div class="form-group">
-              <textarea class="form-textarea" id="f-notes"
-                placeholder="その他ご要望など自由にどうぞ"></textarea>
+              <textarea class="form-textarea" id="f-notes" required
+                placeholder="参考にしたい作家様の作品・色の細かい希望・その他ご要望など自由にどうぞ"></textarea>
             </div>
           </div>
 
