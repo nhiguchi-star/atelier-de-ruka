@@ -1,0 +1,92 @@
+// Supabaseクライアント初期化
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+document.addEventListener('DOMContentLoaded', async () => {
+  applyConfig();
+  await loadWork();
+});
+
+function applyConfig() {
+  renderSnsLinks();
+}
+
+// URLの?idから作品を取得して表示
+async function loadWork() {
+  const id = new URLSearchParams(location.search).get('id');
+  const container = document.getElementById('js-work-detail');
+
+  if (!id) {
+    container.innerHTML = '<p class="loading">作品が見つかりません</p>';
+    return;
+  }
+
+  const { data, error } = await db
+    .from('works')
+    .select('*')
+    .eq('id', id)
+    .single();
+
+  if (error || !data) {
+    container.innerHTML = '<p class="loading">作品が見つかりません</p>';
+    return;
+  }
+
+  document.title = `${data.title} — ${SITE_CONFIG.siteName}`;
+  renderWork(data);
+}
+
+// 作品詳細を描画
+function renderWork(w) {
+  const container = document.getElementById('js-work-detail');
+  container.innerHTML = `
+    <a href="works.html" class="back-btn">← 作品一覧に戻る</a>
+    <div class="work-detail-grid">
+      <div class="work-detail-img-wrap">
+        ${w.image_url
+          ? `<img src="${esc(w.image_url)}" alt="${esc(w.title)}" class="work-detail-img">`
+          : `<div class="work-detail-img-placeholder">🌹</div>`
+        }
+      </div>
+      <div class="work-detail-info">
+        ${w.category ? `<span class="badge">${esc(w.category)}</span>` : ''}
+        <h1 class="work-detail-title">${esc(w.title)}</h1>
+        ${w.price ? `<p class="work-detail-price">¥${Number(w.price).toLocaleString()}</p>` : ''}
+        ${w.description ? `<p class="work-detail-desc">${esc(w.description)}</p>` : ''}
+        ${(w.mercari_url || w.yahoo_url) ? `
+          <div class="work-detail-shops">
+            ${w.mercari_url ? `<a href="${esc(w.mercari_url)}" target="_blank" rel="noopener" class="shop-btn-detail">🛍 メルカリで購入する</a>` : ''}
+            ${w.yahoo_url ? `<a href="${esc(w.yahoo_url)}" target="_blank" rel="noopener" class="shop-btn-detail">🏷 ヤフーフリマで購入する</a>` : ''}
+          </div>
+        ` : `<p class="work-detail-no-shop">現在販売リンクはありません</p>`}
+      </div>
+    </div>
+  `;
+}
+
+// フッターSNSリンク
+function renderSnsLinks() {
+  const container = document.getElementById('js-sns-links');
+  if (!container || !SITE_CONFIG.sns) return;
+  const items = [
+    { key: 'youtube',   label: 'YouTube',      icon: '▶' },
+    { key: 'instagram', label: 'Instagram',     icon: '📸' },
+    { key: 'mercari',   label: 'Mercari',       icon: '🛍' },
+    { key: 'yahoo',     label: 'Yahoo フリマ', icon: '🏷' },
+  ];
+  container.innerHTML = items
+    .filter(item => SITE_CONFIG.sns[item.key])
+    .map(item => `
+      <a href="${esc(SITE_CONFIG.sns[item.key])}" target="_blank" rel="noopener noreferrer" class="sns-link">
+        <span>${item.icon}</span>${item.label}
+      </a>
+    `).join('');
+}
+
+// XSS対策
+function esc(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}

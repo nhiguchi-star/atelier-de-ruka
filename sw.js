@@ -1,11 +1,15 @@
-const CACHE_NAME = 'atelier-de-ruka-v1';
+const CACHE_NAME = 'atelier-de-ruka-v2';
 
 // キャッシュするローカルファイル
 const LOCAL_ASSETS = [
   '/',
   '/index.html',
+  '/works.html',
+  '/work.html',
   '/style.css',
   '/app.js',
+  '/works.js',
+  '/work.js',
   '/config.js',
   '/images/logo.png',
   '/images/collage1.jpg',
