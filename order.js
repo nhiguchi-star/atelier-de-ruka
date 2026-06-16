@@ -1,25 +1,85 @@
+// Supabaseクライアント初期化（参考画像のアップロードに使用）
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+let selectedRefFile = null;
+
 document.addEventListener('DOMContentLoaded', () => {
   renderSnsLinks();
-  setupForm();
+  setupImageUpload();
   setupProductToggle();
+  setupForm();
 });
+
+// 参考画像の選択UI
+function setupImageUpload() {
+  const zone    = document.getElementById('js-order-img-zone');
+  const input   = document.getElementById('f-ref-image');
+  const preview = document.getElementById('js-order-img-preview');
+  const main    = document.getElementById('js-img-main');
+  const sub     = document.getElementById('js-img-sub');
+
+  zone.addEventListener('click', () => input.click());
+
+  input.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (file) handleRefFile(file, preview, main, sub, zone);
+  });
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('has-file'); });
+  zone.addEventListener('dragleave', e => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('has-file'); });
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    const file = e.dataTransfer.files[0];
+    if (file && file.type.startsWith('image/')) {
+      handleRefFile(file, preview, main, sub, zone);
+    }
+  });
+}
+
+function handleRefFile(file, preview, main, sub, zone) {
+  selectedRefFile = file;
+  zone.classList.add('has-file');
+  main.textContent = `✓ ${file.name}`;
+  sub.textContent = `${(file.size / 1024).toFixed(0)} KB`;
+  const reader = new FileReader();
+  reader.onload = e => {
+    preview.innerHTML = `<img src="${e.target.result}" alt="参考画像プレビュー">`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// 参考画像をSupabase Storageにアップロードしてpublic URLを返す
+async function uploadRefImage(file) {
+  const ext      = file.name.split('.').pop().toLowerCase();
+  const fileName = `order-refs/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+  const { error } = await db.storage
+    .from('works')
+    .upload(fileName, file, { cacheControl: '3600', upsert: false });
+  if (error) throw error;
+  const { data } = db.storage.from('works').getPublicUrl(fileName);
+  return data.publicUrl;
+}
 
 // 商品選択時に「向き」セクションを表示/非表示
 function setupProductToggle() {
   const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
   document.querySelectorAll('input[name="product"]').forEach(radio => {
     radio.addEventListener('change', () => {
-      const directionSection = document.getElementById('f-direction-section');
-      directionSection.style.display = keychainTypes.includes(radio.value) ? 'none' : 'block';
-      // 向きのリセット
+      const section = document.getElementById('f-direction-section');
+      const isKeychain = keychainTypes.includes(radio.value);
+      section.style.display = isKeychain ? 'none' : 'block';
       document.querySelectorAll('input[name="direction"]').forEach(r => r.checked = false);
     });
   });
 }
 
 function setupForm() {
-  document.getElementById('js-order-form').addEventListener('submit', e => {
+  const submitBtn = document.getElementById('js-submit-btn');
+
+  document.getElementById('js-order-form').addEventListener('submit', async e => {
     e.preventDefault();
+    submitBtn.disabled = true;
 
     const name       = document.getElementById('f-name').value.trim();
     const email      = document.getElementById('f-email').value.trim();
@@ -29,22 +89,30 @@ function setupForm() {
 
     const styles = [...document.querySelectorAll('#f-style-group input:checked')]
       .map(el => el.value).join('、') || '指定なし';
-
     const partsAmount = document.querySelector('input[name="parts-amount"]:checked')?.value || '指定なし';
-
-    const parts = [...document.querySelectorAll('#f-parts-group input:checked')]
-      .map(el => el.value);
+    const parts = [...document.querySelectorAll('#f-parts-group input:checked')].map(el => el.value);
     if (partsOther) parts.push(partsOther);
     const partsText = parts.join('、') || '指定なし';
-
     const product   = document.querySelector('input[name="product"]:checked')?.value || '指定なし';
     const direction = document.querySelector('input[name="direction"]:checked')?.value || '指定なし';
 
     const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
     const needsDirection = !keychainTypes.includes(product);
 
-    const subject = `【オーダーのご依頼】${name} 様`;
+    // 参考画像のアップロード
+    let imageUrl = null;
+    if (selectedRefFile) {
+      submitBtn.textContent = '画像をアップロード中...';
+      try {
+        imageUrl = await uploadRefImage(selectedRefFile);
+      } catch (err) {
+        console.error('画像アップロード失敗:', err);
+      }
+    }
 
+    submitBtn.textContent = 'メールを準備中...';
+
+    const subject = `【オーダーのご依頼】${name} 様`;
     const body = [
       `${name} 様よりオーダーのご依頼がありました。`,
       '',
@@ -57,17 +125,22 @@ function setupForm() {
       `■ ③ パーツの量：${partsAmount}`,
       `■ ④ 希望パーツ：${partsText}`,
       `■ ⑤ 商品の種類：${product}`,
-      needsDirection ? `■ ⑥ 向き：${direction}` : '',
+      needsDirection ? `■ ⑥ 向き：${direction}` : null,
       '━━━━━━━━━━━━━━━━━',
       '■ その他・備考：',
       notes || '（なし）',
       '',
+      imageUrl ? `■ 参考画像：${imageUrl}` : null,
+      '',
       '━━━━━━━━━━━━━━━━━',
-      '※ 参考画像がある場合は、このメールに返信する形でお送りください。',
-    ].filter(line => line !== null && line !== undefined).join('\n');
+      '※ 追加の参考画像がある場合は、このメールに返信する形でお送りください。',
+    ].filter(line => line !== null).join('\n');
 
     const mailto = `mailto:${SITE_CONFIG.orderEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     location.href = mailto;
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'メールで送信する';
   });
 }
 

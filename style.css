@@ -701,10 +701,8 @@ footer {
 }
 
 .order-cta-wrap {
-  background:
-    linear-gradient(135deg, rgba(200,105,138,0.12) 0%, rgba(184,147,62,0.08) 100%),
-    var(--bg);
-  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #c8698a 0%, #a85570 50%, #b8933e 100%);
+  padding: 3.5rem 2rem;
   text-align: center;
 }
 
@@ -718,44 +716,44 @@ footer {
   font-size: 0.72rem;
   letter-spacing: 0.28em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: rgba(255,255,255,0.75);
   margin-bottom: 0.75rem;
 }
 
 .order-cta-title {
   font-family: 'Noto Serif JP', serif;
-  font-size: 1.45rem;
+  font-size: 1.5rem;
   font-weight: 400;
-  color: var(--text);
+  color: #fff;
   line-height: 1.8;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.6rem;
   letter-spacing: 0.04em;
 }
 
 .order-cta-sub {
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.82);
   font-size: 0.88rem;
   margin-bottom: 1.75rem;
 }
 
 .order-cta-btn {
   display: inline-block;
-  padding: 0.85rem 2.5rem;
-  background: var(--rose);
-  color: #fff;
+  padding: 0.9rem 2.8rem;
+  background: #fff;
+  color: var(--rose);
   text-decoration: none;
   border-radius: 999px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   transition: all 0.2s;
-  box-shadow: 0 4px 16px rgba(200,105,138,0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.18);
 }
 
 .order-cta-btn:hover {
-  background: #b55678;
+  background: var(--rose-pale);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(200,105,138,0.35);
+  box-shadow: 0 8px 28px rgba(0,0,0,0.22);
 }
 
 /* === すべて見るボタン（ホーム） === */

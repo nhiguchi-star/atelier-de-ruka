@@ -312,6 +312,49 @@
     /* 向きセクション（JS制御で表示） */
     #f-direction-section { display: none; }
 
+    /* 参考画像アップロード */
+    .form-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+    .img-upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.18s;
+      background: var(--bg);
+    }
+    .img-upload-zone:hover {
+      border-color: var(--rose-light);
+      background: var(--rose-pale);
+    }
+    .img-upload-zone.has-file {
+      border-color: var(--rose-light);
+      border-style: solid;
+    }
+    .img-upload-main {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 0.25rem;
+    }
+    .img-upload-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      opacity: 0.7;
+    }
+    #js-order-img-preview img {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 0.75rem;
+      border: 1px solid var(--border);
+      object-fit: cover;
+    }
+
     /* 送信ボタン */
     .submit-wrap { text-align: center; margin-top: 2rem; }
     .submit-btn {
@@ -552,6 +595,11 @@
                 <span class="product-name">小物ケース（B8くらい）</span>
                 <span class="product-price">¥1,700〜</span>
               </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="その他">
+                <span class="product-name">その他</span>
+                <span class="product-price">要相談</span>
+              </label>
             </div>
           </div>
 
@@ -562,6 +610,20 @@
               <label class="radio-label"><input type="radio" name="direction" value="縦">縦</label>
               <label class="radio-label"><input type="radio" name="direction" value="横">横</label>
               <label class="radio-label"><input type="radio" name="direction" value="兼用（縦横どちらでも）">兼用（縦横どちらでも）</label>
+            </div>
+          </div>
+
+          <!-- 参考画像 -->
+          <div class="form-section">
+            <p class="form-section-title">参考画像（任意）</p>
+            <p class="form-hint">イメージに近い作品・参考にしたいデザインなどがあればアップロードしてください</p>
+            <div class="img-upload-zone" id="js-order-img-zone">
+              <input type="file" id="f-ref-image" accept="image/*" style="display:none;">
+              <div class="img-upload-content">
+                <p class="img-upload-main" id="js-img-main">📎 クリックして画像を選択</p>
+                <p class="img-upload-sub" id="js-img-sub">JPG・PNG・HEIC など1枚まで</p>
+              </div>
+              <div id="js-order-img-preview"></div>
             </div>
           </div>
 
