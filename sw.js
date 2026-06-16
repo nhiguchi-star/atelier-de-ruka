@@ -1,4 +1,4 @@
-const CACHE_NAME = 'atelier-de-ruka-v3';
+const CACHE_NAME = 'atelier-de-ruka-v4';
 
 // キャッシュするローカルファイル
 const LOCAL_ASSETS = [
