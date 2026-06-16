@@ -127,10 +127,18 @@ function setupForm() {
   const catSelect = document.getElementById('f-category-select');
   const catNew = document.getElementById('f-category-new');
 
-  // 「＋ 新しいカテゴリ」選択時にテキスト入力を表示
+  // カテゴリ変更時：新規入力表示 ＋ そのカテゴリの説明文を自動入力
   catSelect.addEventListener('change', () => {
     catNew.style.display = catSelect.value === '__new__' ? 'block' : 'none';
-    if (catSelect.value === '__new__') catNew.focus();
+    if (catSelect.value === '__new__') {
+      catNew.focus();
+      return;
+    }
+    // 既存カテゴリなら、そのカテゴリの最新作品から説明文を引用
+    if (catSelect.value) {
+      const match = works.find(w => w.category === catSelect.value && w.description);
+      if (match) document.getElementById('f-description').value = match.description;
+    }
   });
 
   // リセット時にテキスト入力を非表示・編集モード解除
