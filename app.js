@@ -3,7 +3,6 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let allWorks = [];
-let currentCategory = 'all';
 
 document.addEventListener('DOMContentLoaded', async () => {
   applyConfig();
@@ -41,51 +40,69 @@ async function loadWorks() {
   }
 
   allWorks = data || [];
-  buildFilter();
-  renderWorks(allWorks);
+  renderByCategory(allWorks);
 }
 
-// カテゴリフィルターを生成
-function buildFilter() {
-  const bar = document.getElementById('js-filter-bar');
-  const categories = ['all', ...new Set(allWorks.map(w => w.category).filter(Boolean))];
-
-  bar.innerHTML = categories.map(c => {
-    const isActive = c === currentCategory;
-    return `<button class="filter-btn${isActive ? ' active' : ''}" data-cat="${esc(c)}">
-      ${c === 'all' ? 'すべて' : esc(c)}
-    </button>`;
-  }).join('');
-
-  bar.addEventListener('click', e => {
-    const btn = e.target.closest('.filter-btn');
-    if (!btn) return;
-    currentCategory = btn.dataset.cat;
-    bar.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b === btn));
-    const filtered = currentCategory === 'all'
-      ? allWorks
-      : allWorks.filter(w => w.category === currentCategory);
-    renderWorks(filtered);
-  });
-}
-
-// 作品カードグリッドを描画
-function renderWorks(works) {
-  const grid = document.getElementById('js-works-grid');
+// カテゴリ別セクションを描画
+function renderByCategory(works) {
+  const container = document.getElementById('js-works-grid');
 
   if (!works.length) {
-    grid.innerHTML = '<p class="loading">作品はまだありません</p>';
+    container.innerHTML = '<p class="loading">作品はまだありません</p>';
     return;
   }
 
-  grid.innerHTML = works.map(w => `
+  // カテゴリ別にグループ化（登録順を維持）
+  const groups = new Map();
+  works.forEach(w => {
+    const cat = w.category || 'その他';
+    if (!groups.has(cat)) groups.set(cat, []);
+    groups.get(cat).push(w);
+  });
+
+  const LIMIT = 6;
+
+  container.innerHTML = [...groups.entries()].map(([cat, items]) => `
+    <div class="category-section">
+      <div class="category-header">
+        <div class="category-header-left">
+          <h3 class="category-name">${esc(cat)}</h3>
+          <span class="category-count">${items.length}点</span>
+        </div>
+        ${items.length > LIMIT
+          ? `<button class="category-more-btn" data-cat="${esc(cat)}">すべて見る（${items.length}点）</button>`
+          : ''}
+      </div>
+      <div class="category-grid" data-cat="${esc(cat)}">
+        ${items.slice(0, LIMIT).map(w => cardHTML(w)).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  attachCardEvents(container);
+
+  // 「すべて見る」ボタン
+  container.querySelectorAll('.category-more-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const cat = btn.dataset.cat;
+      const grid = container.querySelector(`.category-grid[data-cat="${cat}"]`);
+      const items = allWorks.filter(w => (w.category || 'その他') === cat);
+      grid.innerHTML = items.map(w => cardHTML(w)).join('');
+      attachCardEvents(grid);
+      btn.remove();
+    });
+  });
+}
+
+// カードのHTML文字列を生成
+function cardHTML(w) {
+  return `
     <article class="work-card" data-id="${w.id}" tabindex="0" role="button" aria-label="${esc(w.title)}">
       ${w.image_url
         ? `<div class="card-img"><img src="${esc(w.image_url)}" alt="${esc(w.title)}" loading="lazy"></div>`
         : `<div class="card-img-placeholder">🌹</div>`
       }
       <div class="card-body">
-        ${w.category ? `<span class="badge">${esc(w.category)}</span>` : ''}
         <h3 class="card-title">${esc(w.title)}</h3>
         ${w.description ? `<p class="card-desc">${esc(w.description)}</p>` : ''}
         ${w.price ? `<div class="card-price">¥${Number(w.price).toLocaleString()}</div>` : ''}
@@ -97,9 +114,12 @@ function renderWorks(works) {
         ` : ''}
       </div>
     </article>
-  `).join('');
+  `;
+}
 
-  grid.querySelectorAll('.work-card').forEach(card => {
+// カードにクリック・キーボードイベントを付与
+function attachCardEvents(container) {
+  container.querySelectorAll('.work-card').forEach(card => {
     const open = () => {
       const work = allWorks.find(w => w.id === Number(card.dataset.id));
       if (work) openModal(work);
