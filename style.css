@@ -694,6 +694,70 @@ footer {
   margin-bottom: 1rem;
 }
 
+/* === オーダーCTA（ホーム） === */
+#order-cta {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.order-cta-wrap {
+  background:
+    linear-gradient(135deg, rgba(200,105,138,0.12) 0%, rgba(184,147,62,0.08) 100%),
+    var(--bg);
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.order-cta-inner {
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+.order-cta-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+
+.order-cta-title {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 1.45rem;
+  font-weight: 400;
+  color: var(--text);
+  line-height: 1.8;
+  margin-bottom: 0.75rem;
+  letter-spacing: 0.04em;
+}
+
+.order-cta-sub {
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  margin-bottom: 1.75rem;
+}
+
+.order-cta-btn {
+  display: inline-block;
+  padding: 0.85rem 2.5rem;
+  background: var(--rose);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 999px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  transition: all 0.2s;
+  box-shadow: 0 4px 16px rgba(200,105,138,0.3);
+}
+
+.order-cta-btn:hover {
+  background: #b55678;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(200,105,138,0.35);
+}
+
 /* === すべて見るボタン（ホーム） === */
 .view-all-wrap {
   text-align: center;

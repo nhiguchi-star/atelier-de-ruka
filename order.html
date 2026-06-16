@@ -17,7 +17,6 @@
       text-align: center;
       margin-top: 60px;
     }
-
     .order-hero-label {
       font-family: 'Cormorant Garamond', serif;
       font-size: 0.72rem;
@@ -26,7 +25,6 @@
       color: var(--gold);
       margin-bottom: 0.75rem;
     }
-
     .order-hero-title {
       font-family: 'Noto Serif JP', serif;
       font-size: 1.8rem;
@@ -35,14 +33,13 @@
       margin-bottom: 0.75rem;
       letter-spacing: 0.06em;
     }
-
     .order-hero-sub {
       color: var(--text-muted);
       font-size: 0.88rem;
       line-height: 2;
     }
 
-    /* フロー説明 */
+    /* フロー */
     .order-flow {
       display: flex;
       gap: 0;
@@ -50,7 +47,6 @@
       flex-wrap: wrap;
       margin: 2.5rem 0 0;
     }
-
     .flow-step {
       display: flex;
       flex-direction: column;
@@ -59,7 +55,6 @@
       width: 120px;
       position: relative;
     }
-
     .flow-step:not(:last-child)::after {
       content: '→';
       position: absolute;
@@ -68,7 +63,6 @@
       color: var(--rose-light);
       font-size: 1rem;
     }
-
     .flow-num {
       width: 36px;
       height: 36px;
@@ -81,12 +75,93 @@
       align-items: center;
       justify-content: center;
     }
-
     .flow-label {
       font-size: 0.72rem;
       color: var(--text-muted);
       text-align: center;
       line-height: 1.5;
+    }
+
+    /* 注意書き（強調版） */
+    .notice-box {
+      background: #fff0f4;
+      border-left: 4px solid var(--rose);
+      border-radius: 0 12px 12px 0;
+      padding: 1.4rem 1.6rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 12px rgba(200,105,138,0.1);
+    }
+    .notice-box-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--rose);
+      margin-bottom: 0.75rem;
+    }
+    .notice-box ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .notice-box li {
+      font-size: 0.85rem;
+      color: var(--text);
+      line-height: 1.7;
+      padding-left: 1.1rem;
+      position: relative;
+    }
+    .notice-box li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--rose);
+      font-size: 0.75rem;
+      top: 0.15em;
+    }
+
+    /* 料金表 */
+    .price-section {
+      margin-bottom: 2.5rem;
+    }
+    .price-section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .price-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+    }
+    .price-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+    }
+    .price-item-name {
+      font-size: 0.82rem;
+      color: var(--text);
+    }
+    .price-item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--gold);
+      white-space: nowrap;
+      margin-left: 0.5rem;
     }
 
     /* フォームカード */
@@ -99,11 +174,7 @@
       max-width: 720px;
       margin: 0 auto;
     }
-
-    .form-section {
-      margin-bottom: 2rem;
-    }
-
+    .form-section { margin-bottom: 2rem; }
     .form-section-title {
       font-family: 'Noto Serif JP', serif;
       font-size: 0.95rem;
@@ -116,7 +187,6 @@
       align-items: center;
       gap: 0.5rem;
     }
-
     .form-section-title .step-badge {
       display: inline-flex;
       align-items: center;
@@ -130,35 +200,29 @@
       font-weight: 700;
       flex-shrink: 0;
     }
-
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
-
     .form-group {
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
       margin-bottom: 1rem;
     }
-
     .form-group:last-child { margin-bottom: 0; }
-
     .form-label {
       font-size: 0.82rem;
       font-weight: 600;
       color: var(--text);
       letter-spacing: 0.02em;
     }
-
     .form-label .required {
       color: var(--rose);
       margin-left: 0.25rem;
       font-size: 0.72rem;
     }
-
     .form-input,
     .form-textarea {
       padding: 0.65rem 0.9rem;
@@ -171,13 +235,11 @@
       transition: border-color 0.18s, box-shadow 0.18s;
       outline: none;
     }
-
     .form-input:focus,
     .form-textarea:focus {
       border-color: var(--rose-light);
-      box-shadow: 0 0 0 3px rgba(200, 105, 138, 0.1);
+      box-shadow: 0 0 0 3px rgba(200,105,138,0.1);
     }
-
     .form-textarea {
       resize: vertical;
       min-height: 90px;
@@ -185,15 +247,12 @@
     }
 
     /* チェックボックス・ラジオ */
-    .check-group,
-    .radio-group {
+    .check-group, .radio-group {
       display: flex;
       flex-wrap: wrap;
       gap: 0.55rem;
     }
-
-    .check-label,
-    .radio-label {
+    .check-label, .radio-label {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
@@ -207,12 +266,7 @@
       background: var(--bg);
       user-select: none;
     }
-
-    .check-label input,
-    .radio-label input {
-      display: none;
-    }
-
+    .check-label input, .radio-label input { display: none; }
     .check-label:has(input:checked),
     .radio-label:has(input:checked) {
       border-color: var(--rose);
@@ -221,31 +275,45 @@
       font-weight: 600;
     }
 
-    /* 注意書き */
-    .notice-box {
-      background: var(--rose-pale);
-      border: 1px solid var(--rose-light);
+    /* 商品ラジオ（価格つき） */
+    .product-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.55rem;
+    }
+    .product-label {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1rem 1.25rem;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.8;
-      margin-bottom: 2rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      background: var(--bg);
+      user-select: none;
+    }
+    .product-label input { display: none; }
+    .product-label:has(input:checked) {
+      border-color: var(--rose);
+      background: var(--rose-pale);
+    }
+    .product-label:has(input:checked) .product-name { color: var(--rose); font-weight: 600; }
+    .product-name { font-size: 0.82rem; color: var(--text); }
+    .product-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--gold);
+      white-space: nowrap;
+      margin-left: 0.5rem;
     }
 
-    .notice-box strong {
-      color: var(--rose);
-      display: block;
-      margin-bottom: 0.3rem;
-      font-size: 0.88rem;
-    }
+    /* 向きセクション（JS制御で表示） */
+    #f-direction-section { display: none; }
 
     /* 送信ボタン */
-    .submit-wrap {
-      text-align: center;
-      margin-top: 2rem;
-    }
-
+    .submit-wrap { text-align: center; margin-top: 2rem; }
     .submit-btn {
       display: inline-block;
       padding: 1rem 3rem;
@@ -259,15 +327,13 @@
       letter-spacing: 0.06em;
       cursor: pointer;
       transition: all 0.2s;
-      box-shadow: 0 4px 16px rgba(200, 105, 138, 0.3);
+      box-shadow: 0 4px 16px rgba(200,105,138,0.3);
     }
-
     .submit-btn:hover {
       background: #b55678;
       transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(200, 105, 138, 0.35);
+      box-shadow: 0 8px 24px rgba(200,105,138,0.35);
     }
-
     .submit-note {
       margin-top: 0.75rem;
       font-size: 0.75rem;
@@ -277,8 +343,10 @@
     @media (max-width: 640px) {
       .order-card { padding: 1.5rem; }
       .form-row { grid-template-columns: 1fr; }
+      .product-group { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: 1fr; }
       .flow-step { width: 90px; }
-      .flow-step:not(:last-child)::after { right: -10px; font-size: 0.85rem; }
+      .flow-step:not(:last-child)::after { right: -10px; }
     }
   </style>
 </head>
@@ -293,7 +361,6 @@
     </nav>
   </header>
 
-  <!-- ヒーロー -->
   <div class="order-hero">
     <p class="order-hero-label">ORDER</p>
     <h1 class="order-hero-title">オーダーのご依頼</h1>
@@ -301,7 +368,6 @@
       あなただけのオリジナル作品をお作りします。<br>
       フォームに記入して送信すると、メールが開きます。
     </p>
-
     <div class="order-flow">
       <div class="flow-step">
         <div class="flow-num">1</div>
@@ -323,15 +389,59 @@
   </div>
 
   <main>
-    <div class="section-wrap" style="padding-top:3rem; padding-bottom:4rem;">
+    <div class="section-wrap" style="padding-top:3rem; padding-bottom:4rem; max-width:760px;">
 
+      <!-- 注意書き（目立つ版） -->
       <div class="notice-box">
-        <strong>📌 ご注文前にお読みください</strong>
-        ・希望パーツが在庫にない場合、お時間をいただくことがあります。<br>
-        ・参考画像がある場合は、送信後に届くメールへ返信する形でお送りください。<br>
-        ・ご依頼内容によっては制作をお断りする場合があります。あらかじめご了承ください。
+        <p class="notice-box-title">⚠️ ご注文前にお読みください</p>
+        <ul>
+          <li>希望パーツが在庫にない場合、お時間をいただくことがあります。</li>
+          <li>参考画像がある場合は、送信後に届くメールへ<strong>返信する形</strong>でお送りください。</li>
+          <li>ご依頼内容によっては制作をお断りする場合があります。あらかじめご了承ください。</li>
+          <li>料金はデザインの複雑さによって変動します。確定金額はご返信時にお伝えします。</li>
+        </ul>
       </div>
 
+      <!-- 料金表 -->
+      <div class="price-section">
+        <p class="price-section-title">💰 料金の目安（税込）</p>
+        <div class="price-grid">
+          <div class="price-item">
+            <span class="price-item-name">トレカケース（B8）</span>
+            <span class="price-item-price">¥1,200〜</span>
+          </div>
+          <div class="price-item">
+            <span class="price-item-name">チェキサイズケース</span>
+            <span class="price-item-price">¥1,200〜</span>
+          </div>
+          <div class="price-item">
+            <span class="price-item-name">マグネットローダー（B8・チェキ）</span>
+            <span class="price-item-price">¥1,500〜</span>
+          </div>
+          <div class="price-item">
+            <span class="price-item-name">トレカケース・キーホルダー</span>
+            <span class="price-item-price">¥1,500〜</span>
+          </div>
+          <div class="price-item">
+            <span class="price-item-name">チェキサイズキーホルダー</span>
+            <span class="price-item-price">¥1,500〜</span>
+          </div>
+          <div class="price-item">
+            <span class="price-item-name">L版サイズケース</span>
+            <span class="price-item-price">¥1,700〜</span>
+          </div>
+          <div class="price-item">
+            <span class="price-item-name">写真立て</span>
+            <span class="price-item-price">¥1,700〜</span>
+          </div>
+          <div class="price-item">
+            <span class="price-item-name">小物ケース（B8くらい）</span>
+            <span class="price-item-price">¥1,700〜</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- フォーム -->
       <div class="order-card">
         <form id="js-order-form">
 
@@ -352,9 +462,7 @@
 
           <!-- ① ホイップの色 -->
           <div class="form-section">
-            <p class="form-section-title">
-              <span class="step-badge">1</span>ホイップの色
-            </p>
+            <p class="form-section-title"><span class="step-badge">1</span>ホイップの色</p>
             <div class="form-group">
               <input class="form-input" type="text" id="f-color"
                 placeholder="例：白、ピンク、白×ピンクのグラデーション など">
@@ -363,9 +471,7 @@
 
           <!-- ② デザイン系統 -->
           <div class="form-section">
-            <p class="form-section-title">
-              <span class="step-badge">2</span>デザイン系統（複数選択OK）
-            </p>
+            <p class="form-section-title"><span class="step-badge">2</span>デザイン系統（複数選択OK）</p>
             <div class="check-group" id="f-style-group">
               <label class="check-label"><input type="checkbox" value="かっこいい系">かっこいい系</label>
               <label class="check-label"><input type="checkbox" value="キレイ系">キレイ系</label>
@@ -376,10 +482,8 @@
 
           <!-- ③ パーツ量 -->
           <div class="form-section">
-            <p class="form-section-title">
-              <span class="step-badge">3</span>パーツの量
-            </p>
-            <div class="radio-group" id="f-parts-amount-group">
+            <p class="form-section-title"><span class="step-badge">3</span>パーツの量</p>
+            <div class="radio-group">
               <label class="radio-label"><input type="radio" name="parts-amount" value="パーツ少なめシンプル">パーツ少なめシンプル</label>
               <label class="radio-label"><input type="radio" name="parts-amount" value="パーツゴテゴテ派手">パーツゴテゴテ派手</label>
             </div>
@@ -387,9 +491,7 @@
 
           <!-- ④ 希望パーツ -->
           <div class="form-section">
-            <p class="form-section-title">
-              <span class="step-badge">4</span>希望パーツ（複数選択OK）
-            </p>
+            <p class="form-section-title"><span class="step-badge">4</span>希望パーツ（複数選択OK）</p>
             <div class="check-group" id="f-parts-group" style="margin-bottom:0.75rem;">
               <label class="check-label"><input type="checkbox" value="クロスチャーム">クロスチャーム</label>
               <label class="check-label"><input type="checkbox" value="ゴールドパーツでまとめる">ゴールドパーツでまとめる</label>
@@ -401,15 +503,65 @@
             </div>
           </div>
 
-          <!-- ⑤ サイズ -->
+          <!-- ⑤ 商品の種類 -->
           <div class="form-section">
-            <p class="form-section-title">
-              <span class="step-badge">5</span>トレカケースのサイズ
-            </p>
-            <div class="radio-group" id="f-size-group">
-              <label class="radio-label"><input type="radio" name="size" value="B8（標準サイズ）">B8（標準サイズ）</label>
-              <label class="radio-label"><input type="radio" name="size" value="チェキサイズ">チェキサイズ</label>
-              <label class="radio-label"><input type="radio" name="size" value="生写真サイズ">生写真サイズ</label>
+            <p class="form-section-title"><span class="step-badge">5</span>商品の種類</p>
+            <div class="product-group" id="f-product-group">
+              <label class="product-label">
+                <input type="radio" name="product" value="トレカケース（B8）">
+                <span class="product-name">トレカケース（B8）</span>
+                <span class="product-price">¥1,200〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="チェキサイズケース">
+                <span class="product-name">チェキサイズケース</span>
+                <span class="product-price">¥1,200〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="マグネットローダー（B8）">
+                <span class="product-name">マグネットローダー（B8）</span>
+                <span class="product-price">¥1,500〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="マグネットローダー（チェキサイズ）">
+                <span class="product-name">マグネットローダー（チェキ）</span>
+                <span class="product-price">¥1,500〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="トレカケース・キーホルダー">
+                <span class="product-name">トレカケース・キーホルダー</span>
+                <span class="product-price">¥1,500〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="チェキサイズキーホルダー">
+                <span class="product-name">チェキサイズキーホルダー</span>
+                <span class="product-price">¥1,500〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="L版サイズケース">
+                <span class="product-name">L版サイズケース</span>
+                <span class="product-price">¥1,700〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="写真立て">
+                <span class="product-name">写真立て</span>
+                <span class="product-price">¥1,700〜</span>
+              </label>
+              <label class="product-label">
+                <input type="radio" name="product" value="小物ケース（B8くらい）">
+                <span class="product-name">小物ケース（B8くらい）</span>
+                <span class="product-price">¥1,700〜</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- ⑥ 向き（キーホルダー以外のみ表示） -->
+          <div class="form-section" id="f-direction-section">
+            <p class="form-section-title"><span class="step-badge">6</span>向き</p>
+            <div class="radio-group">
+              <label class="radio-label"><input type="radio" name="direction" value="縦">縦</label>
+              <label class="radio-label"><input type="radio" name="direction" value="横">横</label>
+              <label class="radio-label"><input type="radio" name="direction" value="兼用（縦横どちらでも）">兼用（縦横どちらでも）</label>
             </div>
           </div>
 

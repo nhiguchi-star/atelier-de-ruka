@@ -1,33 +1,47 @@
 document.addEventListener('DOMContentLoaded', () => {
   renderSnsLinks();
   setupForm();
+  setupProductToggle();
 });
+
+// 商品選択時に「向き」セクションを表示/非表示
+function setupProductToggle() {
+  const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
+  document.querySelectorAll('input[name="product"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      const directionSection = document.getElementById('f-direction-section');
+      directionSection.style.display = keychainTypes.includes(radio.value) ? 'none' : 'block';
+      // 向きのリセット
+      document.querySelectorAll('input[name="direction"]').forEach(r => r.checked = false);
+    });
+  });
+}
 
 function setupForm() {
   document.getElementById('js-order-form').addEventListener('submit', e => {
     e.preventDefault();
 
-    const name    = document.getElementById('f-name').value.trim();
-    const email   = document.getElementById('f-email').value.trim();
-    const color   = document.getElementById('f-color').value.trim();
-    const notes   = document.getElementById('f-notes').value.trim();
+    const name       = document.getElementById('f-name').value.trim();
+    const email      = document.getElementById('f-email').value.trim();
+    const color      = document.getElementById('f-color').value.trim();
+    const notes      = document.getElementById('f-notes').value.trim();
     const partsOther = document.getElementById('f-parts-other').value.trim();
 
-    // チェックボックス（デザイン系統）
     const styles = [...document.querySelectorAll('#f-style-group input:checked')]
       .map(el => el.value).join('、') || '指定なし';
 
-    // ラジオ（パーツ量）
     const partsAmount = document.querySelector('input[name="parts-amount"]:checked')?.value || '指定なし';
 
-    // チェックボックス（希望パーツ）
     const parts = [...document.querySelectorAll('#f-parts-group input:checked')]
       .map(el => el.value);
     if (partsOther) parts.push(partsOther);
     const partsText = parts.join('、') || '指定なし';
 
-    // ラジオ（サイズ）
-    const size = document.querySelector('input[name="size"]:checked')?.value || '指定なし';
+    const product   = document.querySelector('input[name="product"]:checked')?.value || '指定なし';
+    const direction = document.querySelector('input[name="direction"]:checked')?.value || '指定なし';
+
+    const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
+    const needsDirection = !keychainTypes.includes(product);
 
     const subject = `【オーダーのご依頼】${name} 様`;
 
@@ -42,14 +56,15 @@ function setupForm() {
       `■ ② デザイン系統：${styles}`,
       `■ ③ パーツの量：${partsAmount}`,
       `■ ④ 希望パーツ：${partsText}`,
-      `■ ⑤ サイズ：${size}`,
+      `■ ⑤ 商品の種類：${product}`,
+      needsDirection ? `■ ⑥ 向き：${direction}` : '',
       '━━━━━━━━━━━━━━━━━',
-      `■ その他・備考：`,
+      '■ その他・備考：',
       notes || '（なし）',
       '',
       '━━━━━━━━━━━━━━━━━',
       '※ 参考画像がある場合は、このメールに返信する形でお送りください。',
-    ].join('\n');
+    ].filter(line => line !== null && line !== undefined).join('\n');
 
     const mailto = `mailto:${SITE_CONFIG.orderEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     location.href = mailto;
