@@ -401,7 +401,7 @@
 
     <!-- 作品追加フォーム -->
     <div class="card">
-      <p class="card-title">新しい作品を追加</p>
+      <p class="card-title" id="js-form-title">新しい作品を追加</p>
       <form id="js-add-form">
         <div class="form-grid">
 
@@ -454,6 +454,7 @@
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="js-submit-btn">追加する</button>
           <button type="reset" class="btn btn-ghost">リセット</button>
+          <button type="button" class="btn btn-ghost" id="js-cancel-btn" style="display:none;color:var(--error);">キャンセル</button>
         </div>
       </form>
     </div>

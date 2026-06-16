@@ -6,6 +6,7 @@ const ADMIN_PASSWORD = 'kamen555';
 
 let works = [];
 let selectedFile = null;
+let editingId = null;
 
 document.addEventListener('DOMContentLoaded', () => {
   setupAuth();
@@ -90,10 +91,18 @@ function renderList(list) {
         </div>
       </div>
       <div class="work-actions">
+        <button class="btn btn-ghost edit-btn" data-id="${w.id}">編集</button>
         <button class="btn btn-danger delete-btn" data-id="${w.id}">削除</button>
       </div>
     </div>
   `).join('');
+
+  container.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const work = works.find(w => w.id === Number(btn.dataset.id));
+      if (work) startEdit(work);
+    });
+  });
 
   container.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', () => deleteWork(Number(btn.dataset.id)));
@@ -124,9 +133,17 @@ function setupForm() {
     if (catSelect.value === '__new__') catNew.focus();
   });
 
-  // リセット時にテキスト入力を非表示
+  // リセット時にテキスト入力を非表示・編集モード解除
   form.addEventListener('reset', () => {
     catNew.style.display = 'none';
+    if (editingId) cancelEdit();
+  });
+
+  // キャンセルボタン
+  document.getElementById('js-cancel-btn').addEventListener('click', () => {
+    cancelEdit();
+    form.reset();
+    resetDropZone();
   });
 
   form.addEventListener('submit', async e => {
@@ -159,23 +176,32 @@ function setupForm() {
       }
     }
 
-    submitBtn.textContent = '追加中...';
-    const { error } = await db.from('works').insert({
-      title, category, price, description, image_url: imageUrl,
-      mercari_url: mercariUrl, yahoo_url: yahooUrl,
-    });
+    if (editingId) {
+      // 更新モード
+      submitBtn.textContent = '更新中...';
+      const updates = { title, category, price, description, mercari_url: mercariUrl, yahoo_url: yahooUrl };
+      if (imageUrl) updates.image_url = imageUrl;
 
-    submitBtn.disabled = false;
-    submitBtn.textContent = '追加する';
-
-    if (error) {
-      showToast('追加に失敗しました: ' + error.message, 'error');
-      return;
+      const { error } = await db.from('works').update(updates).eq('id', editingId);
+      submitBtn.disabled = false;
+      if (error) { showToast('更新に失敗しました: ' + error.message, 'error'); submitBtn.textContent = '更新する'; return; }
+      showToast('更新しました！', 'success');
+      cancelEdit();
+    } else {
+      // 追加モード
+      submitBtn.textContent = '追加中...';
+      const { error } = await db.from('works').insert({
+        title, category, price, description, image_url: imageUrl,
+        mercari_url: mercariUrl, yahoo_url: yahooUrl,
+      });
+      submitBtn.disabled = false;
+      submitBtn.textContent = '追加する';
+      if (error) { showToast('追加に失敗しました: ' + error.message, 'error'); return; }
+      showToast('作品を追加しました！', 'success');
+      form.reset();
+      resetDropZone();
     }
 
-    showToast('作品を追加しました！', 'success');
-    form.reset();
-    resetDropZone();
     await loadWorks();
   });
 }
@@ -257,6 +283,57 @@ function resetDropZone() {
   zone.classList.remove('has-file');
   zone.querySelector('.drop-zone-main').textContent = 'ここにドラッグ＆ドロップ';
   zone.querySelector('.drop-zone-sub').textContent = 'またはクリックしてファイルを選択';
+}
+
+// 編集モードを開始
+function startEdit(work) {
+  editingId = work.id;
+
+  document.getElementById('f-title').value = work.title || '';
+  document.getElementById('f-price').value = work.price || '';
+  document.getElementById('f-description').value = work.description || '';
+  document.getElementById('f-mercari-url').value = work.mercari_url || '';
+  document.getElementById('f-yahoo-url').value = work.yahoo_url || '';
+
+  // カテゴリをセレクトに反映
+  const sel = document.getElementById('f-category-select');
+  const catNew = document.getElementById('f-category-new');
+  const match = [...sel.options].find(o => o.value === work.category);
+  if (work.category && match) {
+    sel.value = work.category;
+    catNew.style.display = 'none';
+  } else if (work.category) {
+    sel.value = '__new__';
+    catNew.value = work.category;
+    catNew.style.display = 'block';
+  } else {
+    sel.value = '';
+    catNew.style.display = 'none';
+  }
+
+  // 既存画像をプレビュー表示
+  if (work.image_url) {
+    const preview = document.getElementById('js-img-preview');
+    preview.innerHTML = `<img src="${esc(work.image_url)}" alt="現在の画像">`;
+    const zone = document.getElementById('js-drop-zone');
+    zone.classList.add('has-file');
+    zone.querySelector('.drop-zone-main').textContent = '画像を変更する場合はドロップ';
+    zone.querySelector('.drop-zone-sub').textContent = '変更しない場合はそのまま更新';
+  }
+
+  document.getElementById('js-form-title').textContent = '作品を編集';
+  document.getElementById('js-submit-btn').textContent = '更新する';
+  document.getElementById('js-cancel-btn').style.display = 'inline-block';
+
+  document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// 編集モードを終了
+function cancelEdit() {
+  editingId = null;
+  document.getElementById('js-form-title').textContent = '新しい作品を追加';
+  document.getElementById('js-submit-btn').textContent = '追加する';
+  document.getElementById('js-cancel-btn').style.display = 'none';
 }
 
 // 作品を削除
