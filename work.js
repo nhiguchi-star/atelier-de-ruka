@@ -57,6 +57,13 @@ function renderWork(w) {
           ${SITE_CONFIG.sns.mercari ? `<a href="${esc(SITE_CONFIG.sns.mercari)}" target="_blank" rel="noopener" class="shop-btn-detail">🛍 メルカリで購入する</a>` : ''}
           ${SITE_CONFIG.sns.yahoo ? `<a href="${esc(SITE_CONFIG.sns.yahoo)}" target="_blank" rel="noopener" class="shop-btn-detail">🏷 ヤフーフリマで購入する</a>` : ''}
         </div>
+        <div class="share-wrap">
+          <p class="share-label">この作品をシェア</p>
+          <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(w.title + ' — Atelier de Ruka')}&url=${encodeURIComponent(location.href)}" target="_blank" rel="noopener" class="share-btn share-btn-x">𝕏 でシェア</a>
+            <a href="https://social-plugins.line.me/lineit/share?url=${encodeURIComponent(location.href)}" target="_blank" rel="noopener" class="share-btn share-btn-line">LINE でシェア</a>
+          </div>
+        </div>
       </div>
     </div>
   `;

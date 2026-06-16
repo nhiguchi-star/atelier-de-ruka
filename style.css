@@ -889,6 +889,48 @@ footer {
   color: var(--rose);
 }
 
+.share-wrap {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+
+.share-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.6rem;
+}
+
+.share-buttons {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.share-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1.1rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.18s;
+}
+
+.share-btn-x {
+  background: #000;
+  color: #fff;
+}
+.share-btn-x:hover { background: #333; }
+
+.share-btn-line {
+  background: #06c755;
+  color: #fff;
+}
+.share-btn-line:hover { background: #05b34c; }
+
 .work-detail-no-shop {
   color: var(--text-muted);
   font-size: 0.85rem;
