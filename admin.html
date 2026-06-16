@@ -3,24 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>管理ページ — Handmade Works</title>
+  <title>管理ページ — Atelier de Ruka</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="icon" type="image/png" href="images/icon-512.png?v=2">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Noto+Sans+JP:wght@400;600;700&family=Noto+Serif+JP:wght@400;500&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg:          #121212;
-      --bg-card:     #1e1e1e;
-      --bg-elevated: #2a2a2a;
-      --text:        #e0e0e0;
-      --text-muted:  #9a9a9a;
-      --accent:      #e8a598;
-      --border:      #2e2e2e;
-      --error:       #f28b82;
-      --success:     #81c784;
+      --bg:          #fdf8f2;
+      --bg-card:     #fffef9;
+      --bg-elevated: #fdf5ee;
+      --text:        #3d2b1f;
+      --text-muted:  #9a8472;
+      --rose:        #c8698a;
+      --rose-light:  #e8b0c4;
+      --rose-pale:   #fdf0f4;
+      --gold:        #b8933e;
+      --border:      #e5d8c8;
+      --error:       #c0392b;
+      --success:     #5d8a5e;
+      --shadow:      rgba(180,140,100,0.12);
     }
 
     body {
@@ -32,41 +36,82 @@
     }
 
     header {
-      background: var(--bg-card);
+      background: rgba(255,251,248,0.97);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       padding: 0 2rem;
-      height: 56px;
+      height: 60px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
 
-    header span { font-weight: 700; color: var(--accent); }
-    header a { color: var(--text-muted); font-size: 0.85rem; text-decoration: none; }
-    header a:hover { color: var(--accent); }
+    .header-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      font-style: italic;
+      font-weight: 600;
+      color: var(--rose);
+      letter-spacing: 0.04em;
+    }
+
+    header a {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    header a:hover { color: var(--rose); }
 
     .page {
       max-width: 860px;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem;
+      padding: 2.5rem 1.5rem 4rem;
+    }
+
+    .page-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+      letter-spacing: 0.04em;
+    }
+
+    .page-heading-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
     }
 
     /* フォームカード */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 10px;
+      border-radius: 14px;
       padding: 1.75rem;
       margin-bottom: 2.5rem;
+      box-shadow: 0 2px 12px var(--shadow);
     }
 
     .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
       margin-bottom: 1.25rem;
       padding-bottom: 0.75rem;
       border-bottom: 1px solid var(--border);
+      letter-spacing: 0.04em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
     }
 
     .form-grid {
@@ -84,40 +129,43 @@
     .form-group.full { grid-column: 1 / -1; }
 
     label {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-muted);
       font-weight: 600;
+      letter-spacing: 0.04em;
     }
 
     label .required {
-      color: var(--accent);
+      color: var(--rose);
       margin-left: 0.2rem;
     }
 
     input, textarea, select {
       background: var(--bg-elevated);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 8px;
       color: var(--text);
       font-family: inherit;
       font-size: 0.875rem;
-      padding: 0.55rem 0.75rem;
-      transition: border-color 0.2s;
+      padding: 0.6rem 0.85rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
     }
 
     input:focus, textarea:focus, select:focus {
       outline: none;
-      border-color: var(--accent);
+      border-color: var(--rose-light);
+      box-shadow: 0 0 0 3px rgba(200,105,138,0.1);
     }
 
     textarea { resize: vertical; min-height: 80px; }
 
-    select option { background: var(--bg-elevated); }
+    select option { background: var(--bg-card); }
 
     /* ドロップゾーン */
     .drop-zone {
       border: 2px dashed var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 2rem 1rem;
       cursor: pointer;
       text-align: center;
@@ -126,11 +174,11 @@
       margin-top: 0.35rem;
     }
 
-    .drop-zone:hover { border-color: var(--accent); }
+    .drop-zone:hover { border-color: var(--rose-light); background: var(--rose-pale); }
 
     .drop-zone.drag-over {
-      border-color: var(--accent);
-      background: rgba(232, 165, 152, 0.1);
+      border-color: var(--rose);
+      background: var(--rose-pale);
     }
 
     .drop-zone.has-file { border-color: var(--success); border-style: solid; }
@@ -154,11 +202,12 @@
     .img-preview {
       width: 100%;
       aspect-ratio: 3/2;
-      border-radius: 6px;
+      border-radius: 8px;
       overflow: hidden;
       background: var(--bg-elevated);
       margin-top: 0.5rem;
       display: none;
+      border: 1px solid var(--border);
     }
 
     .img-preview:has(img) { display: block; }
@@ -171,49 +220,51 @@
 
     /* ボタン */
     .btn {
-      padding: 0.6rem 1.5rem;
-      border-radius: 6px;
+      padding: 0.65rem 1.5rem;
+      border-radius: 999px;
       border: none;
       font-family: inherit;
       font-size: 0.875rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.15s;
+      transition: all 0.18s;
+      letter-spacing: 0.03em;
     }
 
     .btn-primary {
-      background: var(--accent);
-      color: #1a1a1a;
+      background: linear-gradient(135deg, var(--rose), var(--gold));
+      color: #fff;
+      box-shadow: 0 3px 12px rgba(200,105,138,0.3);
     }
 
-    .btn-primary:hover { background: #f2b8ae; }
-    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
     .btn-danger {
-      background: rgba(242,139,130,.15);
+      background: rgba(192,57,43,.08);
       color: var(--error);
-      border: 1px solid rgba(242,139,130,.3);
-      padding: 0.35rem 0.75rem;
+      border: 1px solid rgba(192,57,43,.2);
+      padding: 0.35rem 0.85rem;
       font-size: 0.8rem;
     }
 
-    .btn-danger:hover { background: rgba(242,139,130,.25); }
+    .btn-danger:hover { background: rgba(192,57,43,.15); }
 
     .btn-ghost {
-      background: var(--bg-elevated);
+      background: transparent;
       color: var(--text-muted);
       border: 1px solid var(--border);
-      padding: 0.35rem 0.75rem;
+      padding: 0.35rem 0.85rem;
       font-size: 0.8rem;
     }
 
-    .btn-ghost:hover { color: var(--text); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--text-muted); }
 
     .form-actions {
       display: flex;
       gap: 0.75rem;
       align-items: center;
-      margin-top: 1.25rem;
+      margin-top: 1.5rem;
     }
 
     /* トースト通知 */
@@ -222,7 +273,7 @@
       bottom: 1.5rem;
       right: 1.5rem;
       padding: 0.75rem 1.25rem;
-      border-radius: 8px;
+      border-radius: 999px;
       font-size: 0.85rem;
       font-weight: 600;
       opacity: 0;
@@ -233,15 +284,17 @@
     }
 
     #js-toast.show { opacity: 1; transform: translateY(0); }
-    #js-toast.success { background: rgba(129,199,132,.15); color: var(--success); border: 1px solid rgba(129,199,132,.4); }
-    #js-toast.error   { background: rgba(242,139,130,.15); color: var(--error);   border: 1px solid rgba(242,139,130,.4); }
+    #js-toast.success { background: #f0f9f0; color: var(--success); border: 1px solid rgba(93,138,94,.3); }
+    #js-toast.error   { background: #fdf0f0; color: var(--error);   border: 1px solid rgba(192,57,43,.3); }
 
     /* 作品一覧 */
     .works-list-header {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #fff;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
       margin-bottom: 1rem;
+      letter-spacing: 0.04em;
     }
 
     #js-works-list { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -249,18 +302,22 @@
     .work-item {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
       padding: 1rem 1.25rem;
       display: grid;
       grid-template-columns: 64px 1fr auto;
       gap: 1rem;
       align-items: center;
+      box-shadow: 0 1px 6px var(--shadow);
+      transition: box-shadow 0.18s;
     }
+
+    .work-item:hover { box-shadow: 0 3px 14px var(--shadow); }
 
     .work-thumb {
       width: 64px;
       height: 64px;
-      border-radius: 6px;
+      border-radius: 8px;
       object-fit: cover;
       background: var(--bg-elevated);
       display: flex;
@@ -269,6 +326,7 @@
       font-size: 1.75rem;
       flex-shrink: 0;
       overflow: hidden;
+      border: 1px solid var(--border);
     }
 
     .work-thumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -276,7 +334,7 @@
     .work-info-title {
       font-size: 0.9rem;
       font-weight: 600;
-      color: #fff;
+      color: var(--text);
       margin-bottom: 0.25rem;
     }
 
@@ -288,12 +346,10 @@
       flex-wrap: wrap;
     }
 
-    .meta-badge {
-      color: var(--accent);
-    }
+    .meta-badge { color: var(--rose); }
 
     .meta-link {
-      color: var(--accent);
+      color: var(--gold);
       text-decoration: none;
       font-size: 0.775rem;
     }
@@ -319,7 +375,7 @@
       color: var(--text-muted);
       background: var(--bg-card);
       border: 1px dashed var(--border);
-      border-radius: 8px;
+      border-radius: 10px;
     }
 
     @media (max-width: 560px) {
@@ -332,7 +388,7 @@
     #js-auth-overlay {
       position: fixed;
       inset: 0;
-      background: var(--bg);
+      background: linear-gradient(135deg, var(--rose-pale), #fff8f0);
       z-index: 9999;
       display: flex;
       align-items: center;
@@ -342,24 +398,38 @@
     .auth-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 2rem;
+      border-radius: 18px;
+      padding: 2.5rem 2rem;
       width: 100%;
       max-width: 340px;
       text-align: center;
+      box-shadow: 0 8px 36px rgba(180,140,100,0.15);
+    }
+
+    .auth-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin: 0 auto 1.2rem;
+      display: block;
+      border: 2px solid var(--border);
     }
 
     .auth-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.35rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 600;
+      font-style: italic;
+      color: var(--rose);
+      margin-bottom: 0.2rem;
+      letter-spacing: 0.04em;
     }
 
     .auth-sub {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.6rem;
     }
 
     #js-auth-input {
@@ -382,8 +452,9 @@
   <!-- パスワード認証オーバーレイ -->
   <div id="js-auth-overlay">
     <div class="auth-card">
-      <p class="auth-title">🌹 管理ページ</p>
-      <p class="auth-sub">パスワードを入力してください</p>
+      <img src="images/icon-512.png" alt="Atelier de Ruka" class="auth-logo">
+      <p class="auth-title">Atelier de Ruka</p>
+      <p class="auth-sub">管理ページ — パスワードを入力してください</p>
       <form id="js-auth-form">
         <input type="password" id="js-auth-input" placeholder="パスワード" autocomplete="current-password">
         <p id="js-auth-error" class="auth-error"></p>
@@ -393,15 +464,17 @@
   </div>
 
   <header>
-    <span>管理ページ</span>
-    <a href="index.html">← 作品ページへ戻る</a>
+    <span class="header-title">Atelier de Ruka — 管理</span>
+    <a href="index.html">← サイトへ戻る</a>
   </header>
 
   <div class="page">
+    <p class="page-heading-sub">Admin Dashboard</p>
+    <h1 class="page-heading">作品管理</h1>
 
     <!-- 作品追加フォーム -->
     <div class="card">
-      <p class="card-title" id="js-form-title">新しい作品を追加</p>
+      <p class="card-title" id="js-form-title">🌹 新しい作品を追加</p>
       <form id="js-add-form">
         <div class="form-grid">
 
@@ -460,7 +533,7 @@
     </div>
 
     <!-- 作品一覧 -->
-    <p class="works-list-header">登録済みの作品 <span id="js-works-count" style="color:var(--text-muted);font-size:0.85rem;font-weight:400;"></span></p>
+    <p class="works-list-header">🌸 登録済みの作品 <span id="js-works-count" style="color:var(--text-muted);font-size:0.85rem;font-weight:400;font-family:inherit;"></span></p>
     <div id="js-works-list">
       <div class="empty-state">読み込み中...</div>
     </div>
