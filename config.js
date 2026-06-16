@@ -13,7 +13,7 @@ const SITE_CONFIG = {
   aboutText: '🌹 ホイップデコ / レジン / トレカケース\n💎 宝石箱のような贅沢なデコレーション\n🎁 丁寧な梱包と心を込めた手仕事\n🏢 フルタイム勤務の傍ら、一点ずつ大切に制作中',
   orderEmail: 'ichigo.oremilk@gmail.com',
   sns: {
-    youtube:   'https://www.youtube.com/channel/UCoM4MDTqJcV1hwD9LyGzbYQ/posts',
+    youtube:   'https://www.youtube.com/@%E3%82%8B%E3%81%8B%E3%81%AE%E6%89%8B%E8%8A%B8%E9%83%A8%E5%B1%8B',
     instagram: 'https://www.instagram.com/rkaaaaaaan_/',
     mercari:   'https://jp.mercari.com/user/profile/208138567',
     yahoo:     'https://paypayfleamarket.yahoo.co.jp/user/p54911909',
