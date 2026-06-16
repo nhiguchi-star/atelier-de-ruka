@@ -1,4 +1,4 @@
-const CACHE_NAME = 'atelier-de-ruka-v6';
+const CACHE_NAME = 'atelier-de-ruka-v7';
 
 // 画像のみキャッシュ（HTMLとCSSは常に最新を取得）
 const IMAGE_ASSETS = [
