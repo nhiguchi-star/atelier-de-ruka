@@ -127,18 +127,20 @@ function setupForm() {
   const catSelect = document.getElementById('f-category-select');
   const catNew = document.getElementById('f-category-new');
 
-  // カテゴリ変更時：新規入力表示 ＋ そのカテゴリの説明文を自動入力
+  // カテゴリ変更時：新規入力表示 ＋ テンプレートを自動入力
   catSelect.addEventListener('change', () => {
     catNew.style.display = catSelect.value === '__new__' ? 'block' : 'none';
     if (catSelect.value === '__new__') {
       catNew.focus();
       return;
     }
-    // 既存カテゴリなら、そのカテゴリの最新作品から説明文を引用
-    if (catSelect.value) {
-      const match = works.find(w => w.category === catSelect.value && w.description);
-      if (match) document.getElementById('f-description').value = match.description;
-    }
+    if (catSelect.value) fillDescriptionTemplate(catSelect.value);
+  });
+
+  // 新しいカテゴリ名を入力したとき、同名テンプレートがあれば自動入力
+  catNew.addEventListener('input', () => {
+    const name = catNew.value.trim();
+    if (name) fillDescriptionTemplate(name);
   });
 
   // リセット時にテキスト入力を非表示・編集モード解除
@@ -193,6 +195,7 @@ function setupForm() {
       const { error } = await db.from('works').update(updates).eq('id', editingId);
       submitBtn.disabled = false;
       if (error) { showToast('更新に失敗しました: ' + error.message, 'error'); submitBtn.textContent = '更新する'; return; }
+      if (category && description) saveCategoryTemplate(category, description);
       showToast('更新しました！', 'success');
       cancelEdit();
     } else {
@@ -205,6 +208,7 @@ function setupForm() {
       submitBtn.disabled = false;
       submitBtn.textContent = '追加する';
       if (error) { showToast('追加に失敗しました: ' + error.message, 'error'); return; }
+      if (category && description) saveCategoryTemplate(category, description);
       showToast('作品を追加しました！', 'success');
       form.reset();
       resetDropZone();
@@ -360,6 +364,21 @@ function showToast(message, type = 'success') {
   toast.className = `show ${type}`;
   clearTimeout(toast._timer);
   toast._timer = setTimeout(() => { toast.className = ''; }, 3000);
+}
+
+// カテゴリテンプレートをlocalStorageに保存
+function saveCategoryTemplate(category, description) {
+  const templates = JSON.parse(localStorage.getItem('catTemplates') || '{}');
+  templates[category] = description;
+  localStorage.setItem('catTemplates', JSON.stringify(templates));
+}
+
+// カテゴリテンプレートを説明欄に反映
+function fillDescriptionTemplate(category) {
+  const templates = JSON.parse(localStorage.getItem('catTemplates') || '{}');
+  if (templates[category]) {
+    document.getElementById('f-description').value = templates[category];
+  }
 }
 
 // XSS対策
