@@ -30,6 +30,7 @@ body {
   font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic Pro', sans-serif;
   color: var(--text);
   line-height: 1.6;
+  overflow-x: hidden;
   /* バラ画像を88%の透明クリームで重ねて薄く表示 */
   background:
     linear-gradient(rgba(253, 248, 242, 0.88), rgba(253, 248, 242, 0.88)),
