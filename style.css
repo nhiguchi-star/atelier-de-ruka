@@ -943,7 +943,7 @@ footer {
 }
 
 @media (max-width: 640px) {
-  nav { display: none; }
+  header nav { display: none; }
   .about-content {
     grid-template-columns: 1fr;
     text-align: center;
