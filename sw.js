@@ -1,17 +1,10 @@
-const CACHE_NAME = 'atelier-de-ruka-v5';
+const CACHE_NAME = 'atelier-de-ruka-v6';
 
-// キャッシュするローカルファイル
-const LOCAL_ASSETS = [
-  '/',
-  '/index.html',
-  '/works.html',
-  '/work.html',
-  '/style.css',
-  '/app.js',
-  '/works.js',
-  '/work.js',
-  '/config.js',
+// 画像のみキャッシュ（HTMLとCSSは常に最新を取得）
+const IMAGE_ASSETS = [
   '/images/logo.png',
+  '/images/icon-512.png',
+  '/images/icon-192.png',
   '/images/collage1.jpg',
   '/images/collage2.jpg',
   '/images/collage3.jpg',
@@ -19,15 +12,13 @@ const LOCAL_ASSETS = [
   '/images/collage5.jpg',
 ];
 
-// インストール時にキャッシュ保存
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(LOCAL_ASSETS))
+    caches.open(CACHE_NAME).then(cache => cache.addAll(IMAGE_ASSETS))
   );
   self.skipWaiting();
 });
 
-// 古いキャッシュを削除
 self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
@@ -37,11 +28,24 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// リクエスト処理：Supabaseはネット優先、それ以外はキャッシュ優先
 self.addEventListener('fetch', e => {
-  if (e.request.url.includes('supabase.co') || e.request.url.includes('fonts.google')) {
+  const url = e.request.url;
+
+  // Supabase・Google Fontsはそのまま通す
+  if (url.includes('supabase.co') || url.includes('fonts.google') || url.includes('fonts.gstatic')) {
     return;
   }
+
+  // HTML・CSS・JSはネット優先（最新を取得し、失敗時のみキャッシュ）
+  const isPage = /\.(html|css|js)(\?|$)/.test(url) || url.endsWith('/');
+  if (isPage) {
+    e.respondWith(
+      fetch(e.request).catch(() => caches.match(e.request))
+    );
+    return;
+  }
+
+  // 画像はキャッシュ優先
   e.respondWith(
     caches.match(e.request).then(cached => cached || fetch(e.request))
   );
