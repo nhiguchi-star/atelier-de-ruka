@@ -53,12 +53,10 @@ function renderWork(w) {
         <h1 class="work-detail-title">${esc(w.title)}</h1>
         ${w.price ? `<p class="work-detail-price">¥${Number(w.price).toLocaleString()}</p>` : ''}
         ${w.description ? `<p class="work-detail-desc">${esc(w.description)}</p>` : ''}
-        ${(w.mercari_url || w.yahoo_url) ? `
-          <div class="work-detail-shops">
-            ${w.mercari_url ? `<a href="${esc(w.mercari_url)}" target="_blank" rel="noopener" class="shop-btn-detail">🛍 メルカリで購入する</a>` : ''}
-            ${w.yahoo_url ? `<a href="${esc(w.yahoo_url)}" target="_blank" rel="noopener" class="shop-btn-detail">🏷 ヤフーフリマで購入する</a>` : ''}
-          </div>
-        ` : `<p class="work-detail-no-shop">現在販売リンクはありません</p>`}
+        <div class="work-detail-shops">
+          ${SITE_CONFIG.sns.mercari ? `<a href="${esc(SITE_CONFIG.sns.mercari)}" target="_blank" rel="noopener" class="shop-btn-detail">🛍 メルカリで購入する</a>` : ''}
+          ${SITE_CONFIG.sns.yahoo ? `<a href="${esc(SITE_CONFIG.sns.yahoo)}" target="_blank" rel="noopener" class="shop-btn-detail">🏷 ヤフーフリマで購入する</a>` : ''}
+        </div>
       </div>
     </div>
   `;
