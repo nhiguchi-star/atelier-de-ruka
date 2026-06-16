@@ -101,15 +101,24 @@ function setupForm() {
     const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
     const needsDirection = !keychainTypes.includes(product);
 
+    // 参考画像は必須
+    if (!selectedRefFile) {
+      alert('参考画像を選択してください（必須）');
+      submitBtn.disabled = false;
+      return;
+    }
+
     // 参考画像のアップロード
     let imageUrl = null;
-    if (selectedRefFile) {
-      submitBtn.textContent = '画像をアップロード中...';
-      try {
-        imageUrl = await uploadRefImage(selectedRefFile);
-      } catch (err) {
-        console.error('画像アップロード失敗:', err);
-      }
+    submitBtn.textContent = '画像をアップロード中...';
+    try {
+      imageUrl = await uploadRefImage(selectedRefFile);
+    } catch (err) {
+      console.error('画像アップロード失敗:', err);
+      alert('画像のアップロードに失敗しました。もう一度お試しください。');
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'メールで送信する';
+      return;
     }
 
     submitBtn.textContent = 'メールを準備中...';
@@ -134,9 +143,7 @@ function setupForm() {
       notes || '（なし）',
       '',
       imageUrl ? `■ 参考画像：${imageUrl}` : null,
-      '',
       '━━━━━━━━━━━━━━━━━',
-      '※ 追加の参考画像がある場合は、このメールに返信する形でお送りください。',
     ].filter(line => line !== null).join('\n');
 
     const mailto = `mailto:${SITE_CONFIG.orderEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
