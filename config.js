@@ -11,6 +11,7 @@ const SITE_CONFIG = {
   tagline: '手に取った瞬間、ときめきが止まることのない宝箱を',
   subTagline: '推しを一番美しく輝かせる、高密度なホイップデコケースを制作しています✨',
   aboutText: '🌹 ホイップデコ / レジン / トレカケース\n💎 宝石箱のような贅沢なデコレーション\n🎁 丁寧な梱包と心を込めた手仕事\n🏢 フルタイム勤務の傍ら、一点ずつ大切に制作中',
+  orderEmail: 'n.higuchi@ufas.co.jp',
   sns: {
     youtube:   'https://www.youtube.com/channel/UCoM4MDTqJcV1hwD9LyGzbYQ/posts',
     instagram: 'https://www.instagram.com/rkaaaaaaan_/',

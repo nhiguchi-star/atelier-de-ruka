@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>オーダー — Atelier de Ruka</title>
+  <link rel="icon" type="image/png" href="images/icon-512.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Noto+Sans+JP:wght@400;600;700&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .order-hero {
+      background: linear-gradient(135deg, var(--rose-pale) 0%, var(--bg) 60%);
+      border-bottom: 1px solid var(--border);
+      padding: 3.5rem 2rem 3rem;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    .order-hero-label {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .order-hero-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.06em;
+    }
+
+    .order-hero-sub {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      line-height: 2;
+    }
+
+    /* フロー説明 */
+    .order-flow {
+      display: flex;
+      gap: 0;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 2.5rem 0 0;
+    }
+
+    .flow-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      width: 120px;
+      position: relative;
+    }
+
+    .flow-step:not(:last-child)::after {
+      content: '→';
+      position: absolute;
+      right: -14px;
+      top: 18px;
+      color: var(--rose-light);
+      font-size: 1rem;
+    }
+
+    .flow-num {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--rose);
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flow-label {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* フォームカード */
+    .order-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 4px 24px var(--shadow);
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .form-section-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 0.9rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .form-section-title .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--rose);
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group:last-child { margin-bottom: 0; }
+
+    .form-label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      letter-spacing: 0.02em;
+    }
+
+    .form-label .required {
+      color: var(--rose);
+      margin-left: 0.25rem;
+      font-size: 0.72rem;
+    }
+
+    .form-input,
+    .form-textarea {
+      padding: 0.65rem 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      border-color: var(--rose-light);
+      box-shadow: 0 0 0 3px rgba(200, 105, 138, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 90px;
+      line-height: 1.7;
+    }
+
+    /* チェックボックス・ラジオ */
+    .check-group,
+    .radio-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.55rem;
+    }
+
+    .check-label,
+    .radio-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.18s;
+      background: var(--bg);
+      user-select: none;
+    }
+
+    .check-label input,
+    .radio-label input {
+      display: none;
+    }
+
+    .check-label:has(input:checked),
+    .radio-label:has(input:checked) {
+      border-color: var(--rose);
+      background: var(--rose-pale);
+      color: var(--rose);
+      font-weight: 600;
+    }
+
+    /* 注意書き */
+    .notice-box {
+      background: var(--rose-pale);
+      border: 1px solid var(--rose-light);
+      border-radius: 10px;
+      padding: 1rem 1.25rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      margin-bottom: 2rem;
+    }
+
+    .notice-box strong {
+      color: var(--rose);
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 0.88rem;
+    }
+
+    /* 送信ボタン */
+    .submit-wrap {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      padding: 1rem 3rem;
+      background: var(--rose);
+      color: #fff;
+      border: none;
+      border-radius: 999px;
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 4px 16px rgba(200, 105, 138, 0.3);
+    }
+
+    .submit-btn:hover {
+      background: #b55678;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(200, 105, 138, 0.35);
+    }
+
+    .submit-note {
+      margin-top: 0.75rem;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 640px) {
+      .order-card { padding: 1.5rem; }
+      .form-row { grid-template-columns: 1fr; }
+      .flow-step { width: 90px; }
+      .flow-step:not(:last-child)::after { right: -10px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <span class="site-title">Atelier de Ruka</span>
+    <nav>
+      <a href="index.html">ホーム</a>
+      <a href="works.html" target="_blank">作品一覧</a>
+      <a href="order.html">オーダー</a>
+    </nav>
+  </header>
+
+  <!-- ヒーロー -->
+  <div class="order-hero">
+    <p class="order-hero-label">ORDER</p>
+    <h1 class="order-hero-title">オーダーのご依頼</h1>
+    <p class="order-hero-sub">
+      あなただけのオリジナル作品をお作りします。<br>
+      フォームに記入して送信すると、メールが開きます。
+    </p>
+
+    <div class="order-flow">
+      <div class="flow-step">
+        <div class="flow-num">1</div>
+        <div class="flow-label">フォームを<br>記入・送信</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">2</div>
+        <div class="flow-label">るかから<br>返信</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">3</div>
+        <div class="flow-label">内容を<br>確定</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-num">4</div>
+        <div class="flow-label">制作・<br>納品</div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="section-wrap" style="padding-top:3rem; padding-bottom:4rem;">
+
+      <div class="notice-box">
+        <strong>📌 ご注文前にお読みください</strong>
+        ・希望パーツが在庫にない場合、お時間をいただくことがあります。<br>
+        ・参考画像がある場合は、送信後に届くメールへ返信する形でお送りください。<br>
+        ・ご依頼内容によっては制作をお断りする場合があります。あらかじめご了承ください。
+      </div>
+
+      <div class="order-card">
+        <form id="js-order-form">
+
+          <!-- 連絡先 -->
+          <div class="form-section">
+            <p class="form-section-title">連絡先</p>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="f-name">お名前<span class="required">※必須</span></label>
+                <input class="form-input" type="text" id="f-name" placeholder="るか" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="f-email">メールアドレス<span class="required">※必須</span></label>
+                <input class="form-input" type="email" id="f-email" placeholder="example@mail.com" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- ① ホイップの色 -->
+          <div class="form-section">
+            <p class="form-section-title">
+              <span class="step-badge">1</span>ホイップの色
+            </p>
+            <div class="form-group">
+              <input class="form-input" type="text" id="f-color"
+                placeholder="例：白、ピンク、白×ピンクのグラデーション など">
+            </div>
+          </div>
+
+          <!-- ② デザイン系統 -->
+          <div class="form-section">
+            <p class="form-section-title">
+              <span class="step-badge">2</span>デザイン系統（複数選択OK）
+            </p>
+            <div class="check-group" id="f-style-group">
+              <label class="check-label"><input type="checkbox" value="かっこいい系">かっこいい系</label>
+              <label class="check-label"><input type="checkbox" value="キレイ系">キレイ系</label>
+              <label class="check-label"><input type="checkbox" value="お菓子系">お菓子系</label>
+              <label class="check-label"><input type="checkbox" value="お花系">お花系</label>
+            </div>
+          </div>
+
+          <!-- ③ パーツ量 -->
+          <div class="form-section">
+            <p class="form-section-title">
+              <span class="step-badge">3</span>パーツの量
+            </p>
+            <div class="radio-group" id="f-parts-amount-group">
+              <label class="radio-label"><input type="radio" name="parts-amount" value="パーツ少なめシンプル">パーツ少なめシンプル</label>
+              <label class="radio-label"><input type="radio" name="parts-amount" value="パーツゴテゴテ派手">パーツゴテゴテ派手</label>
+            </div>
+          </div>
+
+          <!-- ④ 希望パーツ -->
+          <div class="form-section">
+            <p class="form-section-title">
+              <span class="step-badge">4</span>希望パーツ（複数選択OK）
+            </p>
+            <div class="check-group" id="f-parts-group" style="margin-bottom:0.75rem;">
+              <label class="check-label"><input type="checkbox" value="クロスチャーム">クロスチャーム</label>
+              <label class="check-label"><input type="checkbox" value="ゴールドパーツでまとめる">ゴールドパーツでまとめる</label>
+              <label class="check-label"><input type="checkbox" value="シルバーパーツでまとめる">シルバーパーツでまとめる</label>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <input class="form-input" type="text" id="f-parts-other"
+                placeholder="その他の希望パーツがあれば自由に記入してください">
+            </div>
+          </div>
+
+          <!-- ⑤ サイズ -->
+          <div class="form-section">
+            <p class="form-section-title">
+              <span class="step-badge">5</span>トレカケースのサイズ
+            </p>
+            <div class="radio-group" id="f-size-group">
+              <label class="radio-label"><input type="radio" name="size" value="B8（標準サイズ）">B8（標準サイズ）</label>
+              <label class="radio-label"><input type="radio" name="size" value="チェキサイズ">チェキサイズ</label>
+              <label class="radio-label"><input type="radio" name="size" value="生写真サイズ">生写真サイズ</label>
+            </div>
+          </div>
+
+          <!-- その他・備考 -->
+          <div class="form-section">
+            <p class="form-section-title">その他・備考</p>
+            <div class="form-group">
+              <textarea class="form-textarea" id="f-notes"
+                placeholder="参考にしたい作品・イメージ、その他ご要望など自由にどうぞ&#10;&#10;※ 参考画像は送信後のメールに返信する形でお送りください"></textarea>
+            </div>
+          </div>
+
+          <div class="submit-wrap">
+            <button type="submit" class="submit-btn">メールで送信する</button>
+            <p class="submit-note">ボタンを押すとメールアプリが開きます</p>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p class="footer-site-name">Atelier de Ruka</p>
+    <div class="sns-links" id="js-sns-links"></div>
+    <p class="footer-copy">© 2026 All Rights Reserved</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
+  <script src="order.js"></script>
+</body>
+</html>
