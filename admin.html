@@ -326,9 +326,70 @@
       .work-item { grid-template-columns: 48px 1fr; }
       .work-actions { grid-column: 1 / -1; }
     }
+
+    /* パスワード認証オーバーレイ */
+    #js-auth-overlay {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 340px;
+      text-align: center;
+    }
+
+    .auth-title {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+
+    .auth-sub {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    #js-auth-input {
+      width: 100%;
+      margin-bottom: 0.75rem;
+      text-align: center;
+      letter-spacing: 0.12em;
+    }
+
+    .auth-error {
+      color: var(--error);
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+      min-height: 1.2em;
+    }
   </style>
 </head>
 <body>
+
+  <!-- パスワード認証オーバーレイ -->
+  <div id="js-auth-overlay">
+    <div class="auth-card">
+      <p class="auth-title">🌹 管理ページ</p>
+      <p class="auth-sub">パスワードを入力してください</p>
+      <form id="js-auth-form">
+        <input type="password" id="js-auth-input" placeholder="パスワード" autocomplete="current-password">
+        <p id="js-auth-error" class="auth-error"></p>
+        <button type="submit" class="btn btn-primary" style="width:100%;">ログイン</button>
+      </form>
+    </div>
+  </div>
 
   <header>
     <span>管理ページ</span>

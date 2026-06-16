@@ -2,14 +2,45 @@
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+const ADMIN_PASSWORD = 'kamen555';
+
 let works = [];
 let selectedFile = null;
 
-document.addEventListener('DOMContentLoaded', async () => {
+document.addEventListener('DOMContentLoaded', () => {
+  setupAuth();
+});
+
+// パスワード認証のセットアップ
+function setupAuth() {
+  // セッション中にすでに認証済みならそのまま開く
+  if (sessionStorage.getItem('adminAuth') === '1') {
+    document.getElementById('js-auth-overlay').style.display = 'none';
+    initAdmin();
+    return;
+  }
+
+  document.getElementById('js-auth-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const input = document.getElementById('js-auth-input').value;
+    if (input === ADMIN_PASSWORD) {
+      sessionStorage.setItem('adminAuth', '1');
+      document.getElementById('js-auth-overlay').style.display = 'none';
+      initAdmin();
+    } else {
+      document.getElementById('js-auth-error').textContent = 'パスワードが違います';
+      document.getElementById('js-auth-input').value = '';
+      document.getElementById('js-auth-input').focus();
+    }
+  });
+}
+
+// 認証後に管理機能を初期化
+async function initAdmin() {
   await loadWorks();
   setupForm();
   setupDropZone();
-});
+}
 
 // 作品一覧を取得
 async function loadWorks() {
