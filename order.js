@@ -146,8 +146,8 @@ function setupForm() {
       '━━━━━━━━━━━━━━━━━',
     ].filter(line => line !== null).join('\n');
 
-    const mailto = `mailto:${SITE_CONFIG.orderEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    location.href = mailto;
+    const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(SITE_CONFIG.orderEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(gmailUrl, '_blank');
 
     submitBtn.disabled = false;
     submitBtn.textContent = 'メールで送信する';
