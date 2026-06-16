@@ -123,6 +123,13 @@
       font-size: 0.75rem;
       top: 0.15em;
     }
+    .notice-box-danger {
+      background: #fff8f0;
+      border-left-color: #c0793a;
+      margin-top: 1rem;
+    }
+    .notice-box-danger .notice-box-title { color: #c0793a; }
+    .notice-box-danger li::before { color: #c0793a; }
 
     /* 料金表 */
     .price-section {
@@ -438,10 +445,21 @@
       <div class="notice-box">
         <p class="notice-box-title">⚠️ ご注文前にお読みください</p>
         <ul>
-          <li>希望パーツが在庫にない場合、お時間をいただくことがあります。</li>
-          <li>参考画像がある場合は、送信後に届くメールへ<strong>返信する形</strong>でお送りください。</li>
-          <li>ご依頼内容によっては制作をお断りする場合があります。あらかじめご了承ください。</li>
+          <li>オーダー依頼から制作完了まで、<strong>1週間〜1ヶ月程度</strong>お時間をいただきます。使用パーツによって変動します。</li>
+          <li>希望パーツが在庫にない場合、さらにお時間をいただくことがあります。</li>
+          <li>作品完成後は<strong>メルカリ・ヤフーフリマにて専用ページを作成</strong>します。そちらからご購入をお願いいたします。</li>
           <li>料金はデザインの複雑さによって変動します。確定金額はご返信時にお伝えします。</li>
+          <li>参考画像がある場合は、送信後に届くメールへ<strong>返信する形</strong>でお送りください。</li>
+        </ul>
+      </div>
+
+      <!-- お断り条件 -->
+      <div class="notice-box notice-box-danger">
+        <p class="notice-box-title">🚫 下記の場合はオーダーをお断りします</p>
+        <ul>
+          <li>基本的なマナーができない方（最初からため口・上から目線・他の作家様の作品の模倣依頼など）</li>
+          <li>無理難題なオーダー（大量注文など、制作が困難なご依頼）</li>
+          <li>お支払いが困難な状況でのオーダー ※該当する方は次回以降のオーダーも一切お受けできません</li>
         </ul>
       </div>
 
@@ -610,6 +628,15 @@
               <label class="radio-label"><input type="radio" name="direction" value="縦">縦</label>
               <label class="radio-label"><input type="radio" name="direction" value="横">横</label>
               <label class="radio-label"><input type="radio" name="direction" value="兼用（縦横どちらでも）">兼用（縦横どちらでも）</label>
+            </div>
+          </div>
+
+          <!-- 販売希望サイト -->
+          <div class="form-section">
+            <p class="form-section-title">購入を希望する販売サイト（複数選択OK）</p>
+            <div class="check-group" id="f-shop-group">
+              <label class="check-label"><input type="checkbox" value="メルカリ">🛍 メルカリ</label>
+              <label class="check-label"><input type="checkbox" value="ヤフーフリマ">🏷 ヤフーフリマ</label>
             </div>
           </div>
 

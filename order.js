@@ -95,6 +95,8 @@ function setupForm() {
     const partsText = parts.join('、') || '指定なし';
     const product   = document.querySelector('input[name="product"]:checked')?.value || '指定なし';
     const direction = document.querySelector('input[name="direction"]:checked')?.value || '指定なし';
+    const shops = [...document.querySelectorAll('#f-shop-group input:checked')]
+      .map(el => el.value).join('、') || '指定なし';
 
     const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
     const needsDirection = !keychainTypes.includes(product);
@@ -126,6 +128,7 @@ function setupForm() {
       `■ ④ 希望パーツ：${partsText}`,
       `■ ⑤ 商品の種類：${product}`,
       needsDirection ? `■ ⑥ 向き：${direction}` : null,
+      `■ 購入希望サイト：${shops}`,
       '━━━━━━━━━━━━━━━━━',
       '■ その他・備考：',
       notes || '（なし）',
