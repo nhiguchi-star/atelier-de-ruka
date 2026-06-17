@@ -64,7 +64,6 @@ function setupForm() {
     e.preventDefault();
     submitBtn.disabled = true;
 
-    const name        = document.getElementById('f-name').value.trim();
     const color       = document.getElementById('f-color').value.trim();
     const notes       = document.getElementById('f-notes').value.trim();
     const partsOther  = document.getElementById('f-parts-other').value.trim();
@@ -117,8 +116,6 @@ function setupForm() {
     // LINEに送るメッセージテキストを組み立て
     const lineText = [
       '【オーダーのご依頼】',
-      '',
-      `■ お名前：${name}`,
       '━━━━━━━━━━━━━',
       `■ ① ホイップの色：${color || '未記入'}`,
       `■ ② デザイン系統：${styles}`,
