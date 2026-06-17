@@ -142,27 +142,6 @@ nav a:hover { color: var(--rose); }
 }
 
 /* 装飾ライン */
-.hero-divider {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  max-width: 260px;
-  margin: 0 auto 2rem;
-  animation: heroFadeIn 0.9s ease 0.25s both;
-}
-
-.hero-divider::before,
-.hero-divider::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--rose-light), transparent);
-}
-
-.hero-divider-icon {
-  font-size: 1rem;
-  flex-shrink: 0;
-}
 
 .hero-tagline {
   font-family: 'Noto Serif JP', serif;
