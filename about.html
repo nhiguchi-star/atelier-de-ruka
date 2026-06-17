@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作家について — Atelier de Ruka</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=Noto+Sans+JP:wght@400;600;700&family=Noto+Serif+JP:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/icon-512.png?v=2">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="/images/icon-512.png">
+  <meta name="theme-color" content="#c8698a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Atelier de Ruka">
+  <link rel="stylesheet" href="style.css?v=5">
+</head>
+<body>
+
+  <header>
+    <span class="site-title" id="js-site-title">Handmade Works</span>
+    <nav>
+      <a href="index.html">ホーム</a>
+      <a href="works.html" target="_blank">作品一覧</a>
+      <a href="order.html">オーダー</a>
+      <a href="index.html#connect">SNS・ショップ</a>
+    </nav>
+  </header>
+
+  <main style="margin-top: 60px;">
+    <!-- 作家について -->
+    <section id="about">
+      <div class="section-wrap">
+        <p class="section-label">ABOUT</p>
+        <h2 class="section-heading">作家について</h2>
+        <div class="about-profile">
+          <div class="about-photo-col">
+            <div class="about-photo-main-frame">
+              <img src="images/about-collage.jpg" alt="推し活の日々" class="about-photo-main-img">
+            </div>
+          </div>
+          <div class="about-text-col">
+            <p class="about-name" id="js-about-name"></p>
+            <span class="about-catch-badge">オタクに優しいハンドメイド作家</span>
+            <div class="about-story">
+              <p>自身もオタク。最推しの推し活グッズのカラーがあまりにも少ないなら、「自分で作ってしまおう」——そんな想いから制作をスタートしました。</p>
+              <p>同じ気持ちを持つオタクのみなさんに、推しを一番美しく輝かせる作品をお届けしたいと、日々技術向上に力を入れています。</p>
+            </div>
+            <ul class="about-highlights">
+              <li><span class="about-hl-icon">🌹</span>ホイップデコ / レジン / トレカケース</li>
+              <li><span class="about-hl-icon">💎</span>宝石箱のような贅沢なデコレーション</li>
+              <li><span class="about-hl-icon">🎁</span>丁寧な梱包と心を込めた手仕事</li>
+              <li><span class="about-hl-icon">🏢</span>フルタイム勤務の傍ら、一点ずつ大切に制作中</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p class="footer-site-name" id="js-footer-name">Handmade Works</p>
+    <div class="sns-links" id="js-sns-links"></div>
+    <nav class="footer-legal">
+      <a href="tokusho.html">特定商取引法に基づく表記</a>
+    </nav>
+    <p class="footer-copy">© 2026 All Rights Reserved</p>
+  </footer>
+
+  <!-- ボトムナビ（スマホ専用） -->
+  <nav class="bottom-nav">
+    <a href="index.html" class="bottom-nav-item" data-page="index">
+      <span class="bottom-nav-icon">🌸</span>
+      <span class="bottom-nav-label">ホーム</span>
+    </a>
+    <a href="works.html" target="_blank" class="bottom-nav-item" data-page="works">
+      <span class="bottom-nav-icon">🌹</span>
+      <span class="bottom-nav-label">作品一覧</span>
+    </a>
+    <a href="order.html" class="bottom-nav-item" data-page="order">
+      <span class="bottom-nav-icon">💌</span>
+      <span class="bottom-nav-label">オーダー</span>
+    </a>
+    <a href="index.html#connect" class="bottom-nav-item" data-page="connect">
+      <span class="bottom-nav-icon">🎀</span>
+      <span class="bottom-nav-label">ショップ</span>
+    </a>
+  </nav>
+
+  <script src="config.js"></script>
+  <script src="about.js"></script>
+</body>
+</html>

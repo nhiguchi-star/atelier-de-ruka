@@ -16,7 +16,8 @@ function applyConfig() {
   document.title = SITE_CONFIG.siteName;
   document.getElementById('js-site-title').textContent = SITE_CONFIG.siteName;
   document.getElementById('js-footer-name').textContent = SITE_CONFIG.siteName;
-  document.getElementById('js-about-name').textContent = SITE_CONFIG.creatorName;
+  const aboutName = document.getElementById('js-about-name');
+  if (aboutName) aboutName.textContent = SITE_CONFIG.creatorName;
   renderSnsLinks();
   renderConnectLinks();
   renderHeroSns();
