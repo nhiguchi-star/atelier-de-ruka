@@ -137,8 +137,7 @@ nav a:hover { color: var(--rose); }
   width: 100%;
   height: auto;
   display: block;
-  border-radius: 10px;
-  filter: drop-shadow(0 10px 32px rgba(180, 140, 100, 0.28));
+  filter: drop-shadow(0 8px 24px rgba(180, 140, 100, 0.22));
 }
 
 /* 装飾ライン */
