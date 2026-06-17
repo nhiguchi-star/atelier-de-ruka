@@ -320,53 +320,20 @@
     /* 向きセクション（JS制御で表示） */
     #f-direction-section { display: none; }
 
-    /* 参考画像アップロード */
-    .form-hint {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 0.75rem;
-      line-height: 1.6;
-    }
-    .img-upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.18s;
-      background: var(--bg);
-    }
-    .img-upload-zone:hover {
-      border-color: var(--rose-light);
-      background: var(--rose-pale);
-    }
-    .img-upload-zone.has-file {
-      border-color: var(--rose-light);
-      border-style: solid;
-    }
-    .img-upload-main {
-      font-size: 0.88rem;
-      color: var(--text-muted);
-      margin-bottom: 0.25rem;
-    }
-    .img-upload-sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      opacity: 0.7;
-    }
-    .img-preview-grid {
+    /* 参考画像LINE案内 */
+    .line-img-notice {
       display: flex;
-      flex-wrap: wrap;
+      align-items: flex-start;
       gap: 0.6rem;
-      margin-top: 0.75rem;
+      background: #e8f9ef;
+      border: 1.5px solid #06C755;
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      font-size: 0.84rem;
+      color: #1a5c2e;
+      line-height: 1.7;
     }
-    .img-preview-grid img {
-      width: 100px;
-      height: 100px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      object-fit: cover;
-    }
+    .line-img-notice strong { color: #00833e; }
 
     /* 送信ボタン */
     .submit-wrap { text-align: center; margin-top: 2rem; }
@@ -789,16 +756,10 @@
 
           <!-- 参考画像 -->
           <div class="form-section">
-            <p class="form-section-title">参考画像<span class="required" style="font-size:0.72rem; color:var(--rose); margin-left:0.3rem; font-family:'Noto Sans JP',sans-serif;">※必須</span></p>
-            <p class="form-hint">イメージに近い作品・参考にしたいデザインなどをアップロードしてください（最大5枚）</p>
-            <div class="img-upload-zone" id="js-order-img-zone">
-              <input type="file" id="f-ref-image" accept="image/*" multiple style="display:none;">
-              <div class="img-upload-content">
-                <p class="img-upload-main" id="js-img-main">📎 クリックして画像を選択</p>
-                <p class="img-upload-sub" id="js-img-sub">JPG・PNG・HEIC など・最大5枚</p>
-              </div>
+            <p class="form-section-title">参考画像</p>
+            <div class="line-img-notice">
+              📎&nbsp;<span>イメージに近い作品・参考にしたいデザインは、<strong>LINEのトーク画面に直接添付</strong>してください。テキスト送信後、続けて画像を送ればOKです！</span>
             </div>
-            <div id="js-order-img-preview" class="img-preview-grid"></div>
           </div>
 
           <!-- その他・備考 -->
@@ -856,6 +817,8 @@
         <span>② LINEを友達追加</span>
         <span>→</span>
         <span>③ 貼り付けて送信</span>
+        <span>→</span>
+        <span>④ 参考画像を添付</span>
       </div>
       <div class="line-modal-text-box" id="js-line-modal-text"></div>
       <button class="line-copy-btn" id="js-line-copy-btn">📋 テキストをコピーする</button>
@@ -864,13 +827,12 @@
       </a>
       <p class="line-modal-note">
         友達追加後、コピーしたテキストをトークに貼り付けて送信してください<br>
-        ※参考画像はURLとして本文に含まれています
+        📎 続けて参考画像もトークに添付してください
       </p>
       <button class="line-modal-close-btn" id="js-line-modal-close">閉じる（内容を修正する）</button>
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
   <script src="order.js"></script>
 </body>

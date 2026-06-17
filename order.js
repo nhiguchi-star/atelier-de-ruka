@@ -1,73 +1,9 @@
-// Supabaseクライアント初期化（参考画像のアップロードに使用）
-const { createClient } = supabase;
-const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-let selectedRefFiles = [];
-
 document.addEventListener('DOMContentLoaded', () => {
   renderSnsLinks();
-  setupImageUpload();
   setupProductToggle();
   setupLineBtns();
   setupForm();
 });
-
-// 参考画像の選択UI
-function setupImageUpload() {
-  const zone    = document.getElementById('js-order-img-zone');
-  const input   = document.getElementById('f-ref-image');
-  const preview = document.getElementById('js-order-img-preview');
-  const main    = document.getElementById('js-img-main');
-  const sub     = document.getElementById('js-img-sub');
-
-  zone.addEventListener('click', () => input.click());
-
-  input.addEventListener('change', e => {
-    handleRefFiles([...e.target.files], preview, main, sub, zone);
-  });
-
-  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('has-file'); });
-  zone.addEventListener('dragleave', e => { if (!zone.contains(e.relatedTarget)) zone.classList.remove('has-file'); });
-  zone.addEventListener('drop', e => {
-    e.preventDefault();
-    const files = [...e.dataTransfer.files].filter(f => f.type.startsWith('image/'));
-    if (files.length) handleRefFiles(files, preview, main, sub, zone);
-  });
-}
-
-function handleRefFiles(files, preview, main, sub, zone) {
-  if (files.length > 5) {
-    alert('参考画像は5枚までです。最初の5枚を使用します。');
-    files = files.slice(0, 5);
-  }
-  selectedRefFiles = files;
-  zone.classList.add('has-file');
-  main.textContent = `✓ ${files.length}枚選択済み`;
-  sub.textContent = files.map(f => f.name).join('、');
-  preview.innerHTML = '';
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      img.alt = file.name;
-      preview.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// 参考画像をSupabase Storageにアップロードしてpublic URLを返す
-async function uploadRefImage(file) {
-  const ext      = file.name.split('.').pop().toLowerCase();
-  const fileName = `order-refs/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-  const { error } = await db.storage
-    .from('works')
-    .upload(fileName, file, { cacheControl: '3600', upsert: false });
-  if (error) throw error;
-  const { data } = db.storage.from('works').getPublicUrl(fileName);
-  return data.publicUrl;
-}
 
 // 商品選択時に「向き」セクションを表示/非表示
 function setupProductToggle() {
@@ -177,30 +113,6 @@ function setupForm() {
       submitBtn.disabled = false;
       return;
     }
-    if (!selectedRefFiles.length) {
-      alert('参考画像を選択してください（必須）');
-      submitBtn.disabled = false;
-      return;
-    }
-
-    // 参考画像をすべてアップロード
-    const imageUrls = [];
-    submitBtn.textContent = `画像をアップロード中... (0/${selectedRefFiles.length})`;
-    for (let i = 0; i < selectedRefFiles.length; i++) {
-      try {
-        const url = await uploadRefImage(selectedRefFiles[i]);
-        imageUrls.push(url);
-        submitBtn.textContent = `画像をアップロード中... (${i + 1}/${selectedRefFiles.length})`;
-      } catch (err) {
-        console.error('画像アップロード失敗:', err);
-        alert('画像のアップロードに失敗しました。もう一度お試しください。');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'LINEで依頼する';
-        return;
-      }
-    }
-
-    submitBtn.textContent = 'メッセージを作成中...';
 
     // LINEに送るメッセージテキストを組み立て
     const lineText = [
@@ -216,9 +128,7 @@ function setupForm() {
       needsDirection ? `■ ⑥ 向き：${direction}` : null,
       `■ 購入希望サイト：${shop}`,
       '━━━━━━━━━━━━━',
-      imageUrls.length
-        ? '■ 参考画像：\n' + imageUrls.map((url, i) => `${i + 1}. ${url}`).join('\n')
-        : null,
+      '■ 参考画像：このメッセージの後にLINEで送ります',
       '━━━━━━━━━━━━━',
       notes ? `■ その他・備考：\n${notes}` : '■ その他・備考：（なし）',
     ].filter(l => l !== null).join('\n');
