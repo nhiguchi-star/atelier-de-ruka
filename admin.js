@@ -9,6 +9,8 @@ let works = [];
 let editingId = null;
 // 各エントリーの選択ファイル（インデックス = エントリー番号）
 let entryFiles = [null];
+// 各エントリーの出力リサイズ寸法
+let resizeDims = {};
 
 document.addEventListener('DOMContentLoaded', () => {
   setupAuth();
@@ -248,15 +250,6 @@ function createEntryBlockHTML(idx) {
             <p class="drop-zone-sub">またはクリックしてファイルを選択</p>
           </div>
           <div class="img-preview" id="js-img-preview-${idx}"></div>
-          <div class="img-resize-ctrl" id="js-resize-ctrl-${idx}" style="display:none;">
-            <span class="resize-orig-size" id="js-resize-orig-${idx}"></span>
-            <div class="resize-inputs">
-              <label>幅 <input type="number" id="js-resize-w-${idx}" min="100" max="6000" step="10"> px</label>
-              <span class="resize-sep">×</span>
-              <label>高さ <input type="number" id="js-resize-h-${idx}" min="100" max="6000" step="10"> px</label>
-              <label><input type="checkbox" id="js-resize-lock-${idx}" checked> 比率固定</label>
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -308,38 +301,54 @@ function handleFile(idx, file) {
   const reader = new FileReader();
   reader.onload = e => {
     const dataUrl = e.target.result;
-    document.getElementById(`js-img-preview-${idx}`).innerHTML =
-      `<img src="${dataUrl}" alt="プレビュー">`;
+    const preview = document.getElementById(`js-img-preview-${idx}`);
+    preview.innerHTML = `<img src="${dataUrl}" alt="プレビュー">`;
     const zone = document.getElementById(`js-drop-zone-${idx}`);
     zone.classList.add('has-file');
     zone.querySelector('.drop-zone-main').textContent = `✓ ${file.name}`;
     zone.querySelector('.drop-zone-sub').textContent = `${(file.size / 1024).toFixed(0)} KB`;
 
-    // 画像の実寸を取得してリサイズコントロールを表示
+    // 画像の実寸を取得してドラッグハンドルを設置
     const img = new Image();
     img.onload = () => {
-      const ctrl = document.getElementById(`js-resize-ctrl-${idx}`);
-      if (!ctrl) return;
-      const wInput = document.getElementById(`js-resize-w-${idx}`);
-      const hInput = document.getElementById(`js-resize-h-${idx}`);
-      const origLabel = document.getElementById(`js-resize-orig-${idx}`);
-      const ratio = img.naturalWidth / img.naturalHeight;
-      ctrl.dataset.ratio = ratio;
-      origLabel.textContent = `元サイズ: ${img.naturalWidth} × ${img.naturalHeight} px`;
-      wInput.value = img.naturalWidth;
-      hInput.value = img.naturalHeight;
-      ctrl.style.display = 'block';
+      const nw = img.naturalWidth;
+      const nh = img.naturalHeight;
+      const ratio = nw / nh;
+      resizeDims[idx] = { w: nw, h: nh };
 
-      wInput.oninput = () => {
-        if (document.getElementById(`js-resize-lock-${idx}`)?.checked) {
-          hInput.value = Math.round(parseInt(wInput.value) / ratio) || '';
-        }
-      };
-      hInput.oninput = () => {
-        if (document.getElementById(`js-resize-lock-${idx}`)?.checked) {
-          wInput.value = Math.round(parseInt(hInput.value) * ratio) || '';
-        }
-      };
+      // 出力サイズバッジ（左下）
+      const badge = document.createElement('div');
+      badge.className = 'size-badge';
+      badge.id = `js-size-badge-${idx}`;
+      badge.textContent = `${nw} × ${nh} px`;
+      preview.appendChild(badge);
+
+      // ドラッグハンドル（右下）
+      const handle = document.createElement('div');
+      handle.className = 'resize-handle';
+      handle.title = 'ドラッグして出力サイズを変更';
+      preview.appendChild(handle);
+
+      handle.addEventListener('mousedown', ev => {
+        ev.preventDefault();
+        const startX = ev.clientX;
+        const startW = resizeDims[idx].w;
+        // プレビュー表示幅に対する実寸の比率でスケール
+        const scale = nw / preview.clientWidth;
+
+        const onMove = ev => {
+          const newW = Math.max(100, Math.min(6000, Math.round(startW + (ev.clientX - startX) * scale)));
+          resizeDims[idx] = { w: newW, h: Math.round(newW / ratio) };
+          const b = document.getElementById(`js-size-badge-${idx}`);
+          if (b) b.textContent = `${resizeDims[idx].w} × ${resizeDims[idx].h} px`;
+        };
+        const onUp = () => {
+          document.removeEventListener('mousemove', onMove);
+          document.removeEventListener('mouseup', onUp);
+        };
+        document.addEventListener('mousemove', onMove);
+        document.addEventListener('mouseup', onUp);
+      });
     };
     img.src = dataUrl;
   };
@@ -377,8 +386,7 @@ function resetEntryDropZone(idx) {
   zone.classList.remove('has-file', 'drag-over');
   zone.querySelector('.drop-zone-main').textContent = 'ここにドラッグ＆ドロップ';
   zone.querySelector('.drop-zone-sub').textContent = 'またはクリックしてファイルを選択';
-  const ctrl = document.getElementById(`js-resize-ctrl-${idx}`);
-  if (ctrl) ctrl.style.display = 'none';
+  delete resizeDims[idx];
 }
 
 // 「もう1件追加」ボタンの表示状態を更新
@@ -473,8 +481,8 @@ async function handleEditSubmit(submitBtn) {
   if (entryFiles[0]) {
     submitBtn.textContent = '画像をアップロード中...';
     try {
-      const rw = parseInt(document.getElementById('js-resize-w-0')?.value);
-      const rh = parseInt(document.getElementById('js-resize-h-0')?.value);
+      const rw = resizeDims[0]?.w;
+      const rh = resizeDims[0]?.h;
       const fileToUpload = (rw > 0 && rh > 0)
         ? await resizeImageFile(entryFiles[0], rw, rh)
         : entryFiles[0];
@@ -530,8 +538,8 @@ async function handleBatchSubmit(submitBtn) {
     let imageUrl = null;
     if (entryFiles[idx]) {
       try {
-        const rw = parseInt(document.getElementById(`js-resize-w-${idx}`)?.value);
-        const rh = parseInt(document.getElementById(`js-resize-h-${idx}`)?.value);
+        const rw = resizeDims[idx]?.w;
+        const rh = resizeDims[idx]?.h;
         const fileToUpload = (rw > 0 && rh > 0)
           ? await resizeImageFile(entryFiles[idx], rw, rh)
           : entryFiles[idx];
