@@ -367,6 +367,46 @@
       color: var(--text-muted);
     }
 
+    /* 画像リサイズコントロール */
+    .img-resize-ctrl {
+      margin-top: 0.6rem;
+      padding: 0.75rem 1rem;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+    .resize-orig-size {
+      display: block;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+    .resize-inputs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .resize-inputs label {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .resize-inputs input[type="number"] {
+      width: 90px;
+      padding: 0.3rem 0.5rem;
+      font-size: 0.82rem;
+    }
+    .resize-inputs input[type="checkbox"] {
+      width: auto;
+      margin: 0;
+    }
+    .resize-sep { color: var(--text-muted); font-size: 0.9rem; }
+
     .work-actions { display: flex; gap: 0.5rem; }
 
     .empty-state {
@@ -383,6 +423,58 @@
       .work-item { grid-template-columns: 48px 1fr; }
       .work-actions { grid-column: 1 / -1; }
     }
+
+    /* カテゴリ別グループ */
+    .category-section { margin-bottom: 2rem; }
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 1rem;
+      background: var(--rose-pale);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 0.6rem;
+    }
+    .category-name { font-weight: 700; color: var(--rose); font-size: 0.9rem; letter-spacing: 0.03em; }
+    .category-count { font-size: 0.78rem; color: var(--text-muted); }
+    .category-works { display: flex; flex-direction: column; gap: 0.6rem; padding-left: 0.5rem; }
+    .meta-date { font-size: 0.72rem; color: var(--text-muted); }
+
+    /* 複数エントリーブロック */
+    .entry-block + .entry-block { margin-top: 1.5rem; }
+    .entry-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .entry-block-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--rose);
+    }
+    .entry-divider {
+      border: none;
+      border-top: 2px dashed var(--border);
+      margin: 0 0 1.25rem;
+    }
+    .add-entry-btn {
+      width: 100%;
+      margin: 1.25rem 0 0;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 0.7rem;
+      background: transparent;
+      color: var(--rose);
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: inherit;
+    }
+    .add-entry-btn:hover { background: var(--rose-pale); border-color: var(--rose-light); }
 
     /* パスワード認証オーバーレイ */
     #js-auth-overlay {
@@ -476,55 +568,16 @@
     <div class="card">
       <p class="card-title" id="js-form-title">🌹 新しい作品を追加</p>
       <form id="js-add-form">
-        <div class="form-grid">
 
-          <div class="form-group full">
-            <label>タイトル <span class="required">*</span></label>
-            <input type="text" id="f-title" placeholder="例：フラワーピアス" required>
-          </div>
+        <!-- エントリーブロックはJSで動的生成 -->
+        <div id="js-entries-container"></div>
 
-          <div class="form-group">
-            <label>カテゴリ</label>
-            <select id="f-category-select">
-              <option value="">カテゴリなし</option>
-              <option value="__new__">＋ 新しいカテゴリを追加</option>
-            </select>
-            <input type="text" id="f-category-new" placeholder="新しいカテゴリ名を入力" style="display:none;margin-top:0.35rem;">
-          </div>
+        <!-- もう1件追加ボタン -->
+        <button type="button" id="js-add-entry-btn" class="add-entry-btn" style="display:none;">
+          ＋ もう1件追加
+        </button>
 
-          <div class="form-group">
-            <label>価格（円）</label>
-            <input type="number" id="f-price" placeholder="例：1500" min="0">
-          </div>
-
-          <div class="form-group full">
-            <label>説明文</label>
-            <textarea id="f-description" placeholder="素材・サイズ・こだわりポイントなど"></textarea>
-          </div>
-
-          <div class="form-group full">
-            <label>画像</label>
-            <div id="js-drop-zone" class="drop-zone">
-              <input type="file" id="f-image-file" accept="image/*" hidden>
-              <div class="drop-zone-icon">🌹</div>
-              <p class="drop-zone-main">ここにドラッグ＆ドロップ</p>
-              <p class="drop-zone-sub">またはクリックしてファイルを選択</p>
-            </div>
-            <div class="img-preview" id="js-img-preview"></div>
-          </div>
-
-          <div class="form-group">
-            <label>メルカリURL <small>（任意）</small></label>
-            <input type="url" id="f-mercari-url" placeholder="https://jp.mercari.com/item/...">
-          </div>
-          <div class="form-group">
-            <label>ヤフーフリマURL <small>（任意）</small></label>
-            <input type="url" id="f-yahoo-url" placeholder="https://paypayfleamarket.yahoo.co.jp/item/...">
-          </div>
-
-        </div>
-
-        <div class="form-actions">
+        <div class="form-actions" style="margin-top:1.25rem;">
           <button type="submit" class="btn btn-primary" id="js-submit-btn">追加する</button>
           <button type="reset" class="btn btn-ghost">リセット</button>
           <button type="button" class="btn btn-ghost" id="js-cancel-btn" style="display:none;color:var(--error);">キャンセル</button>
