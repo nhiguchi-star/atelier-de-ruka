@@ -11,6 +11,9 @@ let editingId = null;
 let entryFiles = [null];
 // 各エントリーの出力リサイズ寸法
 let resizeDims = {};
+// 編集中の既存画像URL・元の寸法
+let existingImageUrls = {};
+let origDims = {};
 
 document.addEventListener('DOMContentLoaded', () => {
   setupAuth();
@@ -316,43 +319,48 @@ function handleFile(idx, file) {
       const ratio = nw / nh;
       resizeDims[idx] = { w: nw, h: nh };
 
-      // 出力サイズバッジ（左下）
-      const badge = document.createElement('div');
-      badge.className = 'size-badge';
-      badge.id = `js-size-badge-${idx}`;
-      badge.textContent = `${nw} × ${nh} px`;
-      preview.appendChild(badge);
-
-      // ドラッグハンドル（右下）
-      const handle = document.createElement('div');
-      handle.className = 'resize-handle';
-      handle.title = 'ドラッグして出力サイズを変更';
-      preview.appendChild(handle);
-
-      handle.addEventListener('mousedown', ev => {
-        ev.preventDefault();
-        const startX = ev.clientX;
-        const startW = resizeDims[idx].w;
-        // プレビュー表示幅に対する実寸の比率でスケール
-        const scale = nw / preview.clientWidth;
-
-        const onMove = ev => {
-          const newW = Math.max(100, Math.min(6000, Math.round(startW + (ev.clientX - startX) * scale)));
-          resizeDims[idx] = { w: newW, h: Math.round(newW / ratio) };
-          const b = document.getElementById(`js-size-badge-${idx}`);
-          if (b) b.textContent = `${resizeDims[idx].w} × ${resizeDims[idx].h} px`;
-        };
-        const onUp = () => {
-          document.removeEventListener('mousemove', onMove);
-          document.removeEventListener('mouseup', onUp);
-        };
-        document.addEventListener('mousemove', onMove);
-        document.addEventListener('mouseup', onUp);
-      });
+      attachResizeHandle(idx, nw, ratio, preview);
     };
     img.src = dataUrl;
   };
   reader.readAsDataURL(file);
+}
+
+// プレビューにサイズバッジ＋ドラッグハンドルを設置
+function attachResizeHandle(idx, nw, ratio, preview) {
+  // 既存のバッジ・ハンドルを除去（再設置時の重複防止）
+  preview.querySelectorAll('.size-badge, .resize-handle').forEach(el => el.remove());
+
+  const badge = document.createElement('div');
+  badge.className = 'size-badge';
+  badge.id = `js-size-badge-${idx}`;
+  badge.textContent = `${resizeDims[idx].w} × ${resizeDims[idx].h} px`;
+  preview.appendChild(badge);
+
+  const handle = document.createElement('div');
+  handle.className = 'resize-handle';
+  handle.title = 'ドラッグして出力サイズを変更';
+  preview.appendChild(handle);
+
+  handle.addEventListener('mousedown', ev => {
+    ev.preventDefault();
+    const startX = ev.clientX;
+    const startW = resizeDims[idx].w;
+    const scale = nw / preview.clientWidth;
+
+    const onMove = ev => {
+      const newW = Math.max(100, Math.min(6000, Math.round(startW + (ev.clientX - startX) * scale)));
+      resizeDims[idx] = { w: newW, h: Math.round(newW / ratio) };
+      const b = document.getElementById(`js-size-badge-${idx}`);
+      if (b) b.textContent = `${resizeDims[idx].w} × ${resizeDims[idx].h} px`;
+    };
+    const onUp = () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+  });
 }
 
 // Canvasで画像をリサイズしてFileオブジェクトを返す
@@ -479,6 +487,7 @@ async function handleEditSubmit(submitBtn) {
 
   let imageUrl = null;
   if (entryFiles[0]) {
+    // 新しいファイルをリサイズしてアップロード
     submitBtn.textContent = '画像をアップロード中...';
     try {
       const rw = resizeDims[0]?.w;
@@ -493,6 +502,27 @@ async function handleEditSubmit(submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = '更新する';
       return;
+    }
+  } else if (existingImageUrls[0]) {
+    // 既存画像のサイズが変更された場合のみ再アップロード
+    const rw = resizeDims[0]?.w;
+    const rh = resizeDims[0]?.h;
+    const ow = origDims[0]?.w;
+    const oh = origDims[0]?.h;
+    if (rw && rh && ow && oh && (rw !== ow || rh !== oh)) {
+      submitBtn.textContent = '画像をリサイズ中...';
+      try {
+        const resp = await fetch(existingImageUrls[0]);
+        const blob = await resp.blob();
+        const file = new File([blob], 'image.jpg', { type: blob.type || 'image/jpeg' });
+        imageUrl = await uploadImage(await resizeImageFile(file, rw, rh));
+      }
+      catch (err) {
+        showToast('リサイズに失敗: ' + err.message, 'error');
+        submitBtn.disabled = false;
+        submitBtn.textContent = '更新する';
+        return;
+      }
     }
   }
 
@@ -606,12 +636,25 @@ function startEdit(work) {
   }
 
   if (work.image_url) {
-    document.getElementById('js-img-preview-0').innerHTML =
-      `<img src="${esc(work.image_url)}" alt="現在の画像">`;
+    existingImageUrls[0] = work.image_url;
+    const preview = document.getElementById('js-img-preview-0');
+    preview.innerHTML = `<img src="${esc(work.image_url)}" alt="現在の画像">`;
     const zone = document.getElementById('js-drop-zone-0');
     zone.classList.add('has-file');
     zone.querySelector('.drop-zone-main').textContent = '画像を変更する場合はドロップ';
     zone.querySelector('.drop-zone-sub').textContent = '変更しない場合はそのまま更新';
+
+    // 既存画像にもドラッグリサイズを設置
+    const img = new Image();
+    img.onload = () => {
+      const nw = img.naturalWidth;
+      const nh = img.naturalHeight;
+      const ratio = nw / nh;
+      resizeDims[0] = { w: nw, h: nh };
+      origDims[0] = { w: nw, h: nh };
+      attachResizeHandle(0, nw, ratio, preview);
+    };
+    img.src = work.image_url;
   }
 
   document.getElementById('js-form-title').textContent = '✏️ 作品を編集';
@@ -624,6 +667,10 @@ function startEdit(work) {
 // 編集モード終了
 function cancelEdit() {
   editingId = null;
+  delete existingImageUrls[0];
+  delete origDims[0];
+  delete resizeDims[0];
+  resetEntryDropZone(0);
   document.getElementById('js-form-title').textContent = '🌹 新しい作品を追加';
   document.getElementById('js-submit-btn').textContent = '追加する';
   document.getElementById('js-cancel-btn').style.display = 'none';
