@@ -560,6 +560,20 @@ footer {
   letter-spacing: 0.06em;
 }
 
+.footer-legal {
+  margin-bottom: 0.6rem;
+}
+.footer-legal a {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1px;
+  transition: color 0.15s;
+}
+.footer-legal a:hover {
+  color: var(--rose);
+}
 .footer-copy {
   font-size: 0.72rem;
   color: var(--text-muted);
