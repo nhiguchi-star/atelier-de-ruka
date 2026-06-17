@@ -1,0 +1,5 @@
+User-agent: *
+Disallow: /admin.html
+Disallow: /admin.js
+
+Sitemap: https://atelier-de-ruka.vercel.app/sitemap.xml
