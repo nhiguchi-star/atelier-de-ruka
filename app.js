@@ -104,6 +104,7 @@ function renderConnectLinks() {
   const items = [
     { key: 'youtube',   label: 'YouTube',      icon: '▶',  sub: '制作動画を公開中' },
     { key: 'instagram', label: 'Instagram',     icon: '🌸', sub: '作品・日常を更新中' },
+    { key: 'tiktok',    label: 'TikTok',        icon: '🎵', sub: '制作動画を公開中' },
     { key: 'mercari',   label: 'Mercari',       icon: '🛍', sub: '作品を購入する' },
     { key: 'yahoo',     label: 'Yahoo フリマ', icon: '🏷', sub: '作品を購入する' },
   ];
@@ -129,6 +130,7 @@ function renderSnsLinks() {
   const items = [
     { key: 'youtube',   label: 'YouTube',      icon: '▶' },
     { key: 'instagram', label: 'Instagram',     icon: '📸' },
+    { key: 'tiktok',    label: 'TikTok',        icon: '🎵' },
     { key: 'mercari',   label: 'Mercari',       icon: '🛍' },
     { key: 'yahoo',     label: 'Yahoo フリマ', icon: '🏷' },
   ];

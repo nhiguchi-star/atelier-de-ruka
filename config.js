@@ -17,6 +17,7 @@ const SITE_CONFIG = {
   sns: {
     youtube:   'https://www.youtube.com/@%E3%82%8B%E3%81%8B%E3%81%AE%E6%89%8B%E8%8A%B8%E9%83%A8%E5%B1%8B',
     instagram: 'https://www.instagram.com/rkaaaaaaan_/',
+    tiktok:    'https://www.tiktok.com/@rknaaabn',
     mercari:   'https://jp.mercari.com/user/profile/208138567',
     yahoo:     'https://paypayfleamarket.yahoo.co.jp/user/p54911909',
   },
