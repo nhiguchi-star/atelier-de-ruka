@@ -87,8 +87,14 @@ function renderList(list) {
   container.innerHTML = cats.map(cat => `
     <div class="category-section">
       <div class="category-header">
-        <span class="category-name">🌹 ${esc(cat)}</span>
-        <span class="category-count">${grouped[cat].length}件</span>
+        <div class="category-header-left">
+          <span class="category-name">🌹 ${esc(cat)}</span>
+          <span class="category-count">${grouped[cat].length}件</span>
+        </div>
+        ${cat !== 'カテゴリなし' ? `
+        <button class="btn btn-ghost cat-rename-btn" data-cat="${esc(cat)}" style="font-size:0.75rem; padding:0.25rem 0.7rem;">
+          ✏️ 名前を変更
+        </button>` : ''}
       </div>
       <div class="category-works">
         ${grouped[cat].map(w => `
@@ -113,6 +119,9 @@ function renderList(list) {
     </div>
   `).join('');
 
+  container.querySelectorAll('.cat-rename-btn').forEach(btn => {
+    btn.addEventListener('click', () => startCategoryRename(btn));
+  });
   container.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const work = works.find(w => w.id === Number(btn.dataset.id));
@@ -122,6 +131,57 @@ function renderList(list) {
   container.querySelectorAll('.delete-btn').forEach(btn => {
     btn.addEventListener('click', () => deleteWork(Number(btn.dataset.id)));
   });
+}
+
+// カテゴリ名インライン編集を開始
+function startCategoryRename(btn) {
+  const oldName = btn.dataset.cat;
+  const header = btn.closest('.category-header');
+  const left = header.querySelector('.category-header-left');
+
+  // すでに編集中なら何もしない
+  if (header.querySelector('.cat-rename-input')) return;
+
+  left.innerHTML = `
+    <input class="cat-rename-input" value="${esc(oldName)}" style="
+      font-size:0.88rem; font-weight:700; color:var(--rose);
+      border:1px solid var(--rose-light); border-radius:6px;
+      padding:0.25rem 0.6rem; width:180px; background:var(--bg-card);">
+    <button class="btn btn-primary cat-rename-save" style="font-size:0.75rem; padding:0.25rem 0.8rem;">保存</button>
+    <button class="btn btn-ghost cat-rename-cancel" style="font-size:0.75rem; padding:0.25rem 0.7rem;">キャンセル</button>
+  `;
+  btn.style.display = 'none';
+
+  const input = header.querySelector('.cat-rename-input');
+  input.focus();
+  input.select();
+
+  header.querySelector('.cat-rename-save').addEventListener('click', async () => {
+    const newName = input.value.trim();
+    if (!newName) { showToast('カテゴリ名を入力してください', 'error'); return; }
+    if (newName === oldName) { await loadWorks(); return; }
+    try {
+      await renameCategory(oldName, newName);
+      showToast(`「${oldName}」→「${newName}」に変更しました`, 'success');
+      await loadWorks();
+    } catch (err) {
+      showToast('変更に失敗: ' + err.message, 'error');
+    }
+  });
+
+  header.querySelector('.cat-rename-cancel').addEventListener('click', () => loadWorks());
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') header.querySelector('.cat-rename-save').click();
+    if (e.key === 'Escape') loadWorks();
+  });
+}
+
+// カテゴリ名を一括変更（同カテゴリの全作品を更新）
+async function renameCategory(oldName, newName) {
+  const ids = works.filter(w => w.category === oldName).map(w => w.id);
+  if (!ids.length) return;
+  const { error } = await db.from('works').update({ category: newName }).in('id', ids);
+  if (error) throw error;
 }
 
 // 現在登録済みカテゴリ一覧を返す
