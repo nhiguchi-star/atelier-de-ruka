@@ -12,6 +12,8 @@ const SITE_CONFIG = {
   subTagline: '推しを一番美しく輝かせる、高密度なホイップデコケースを制作しています✨',
   aboutText: '🌹 ホイップデコ / レジン / トレカケース\n💎 宝石箱のような贅沢なデコレーション\n🎁 丁寧な梱包と心を込めた手仕事\n🏢 フルタイム勤務の傍ら、一点ずつ大切に制作中',
   orderEmail: 'ichigo.oremilk@gmail.com',
+  // LINE公式アカウントを作成したら @xxxx-xxxx の形式で書き換える
+  lineOfficialId: '@your-line-id',
   sns: {
     youtube:   'https://www.youtube.com/@%E3%82%8B%E3%81%8B%E3%81%AE%E6%89%8B%E8%8A%B8%E9%83%A8%E5%B1%8B',
     instagram: 'https://www.instagram.com/rkaaaaaaan_/',

@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderSnsLinks();
   setupImageUpload();
   setupProductToggle();
+  setupLineBtns();
   setupForm();
 });
 
@@ -81,30 +82,68 @@ function setupProductToggle() {
   });
 }
 
+// LINE IDを元にバナーボタンのリンクをページ読み込み時に設定
+function setupLineBtns() {
+  const lineId  = SITE_CONFIG.lineOfficialId || '';
+  const isReady = lineId && lineId !== '@your-line-id';
+  const bannerBtn = document.getElementById('js-line-banner-btn');
+  if (!bannerBtn) return;
+  if (isReady) {
+    bannerBtn.href = `https://line.me/R/ti/p/${encodeURIComponent(lineId)}`;
+  } else {
+    bannerBtn.classList.add('not-ready');
+    bannerBtn.textContent = '準備中';
+  }
+}
+
+// LINEモーダルのボタンイベントを一度だけ登録
+function setupLineModal() {
+  const modal    = document.getElementById('js-line-modal');
+  const copyBtn  = document.getElementById('js-line-copy-btn');
+  const closeBtn = document.getElementById('js-line-modal-close');
+
+  copyBtn.addEventListener('click', () => {
+    const text = document.getElementById('js-line-modal-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      copyBtn.textContent = '✅ コピーしました！';
+      copyBtn.classList.add('copied');
+      setTimeout(() => {
+        copyBtn.textContent = '📋 テキストをコピーする';
+        copyBtn.classList.remove('copied');
+      }, 3000);
+    });
+  });
+
+  closeBtn.addEventListener('click', () => modal.classList.remove('open'));
+  modal.addEventListener('click', e => {
+    if (e.target === modal) modal.classList.remove('open');
+  });
+}
+
 function setupForm() {
   const submitBtn = document.getElementById('js-submit-btn');
+  setupLineModal();
 
   document.getElementById('js-order-form').addEventListener('submit', async e => {
     e.preventDefault();
     submitBtn.disabled = true;
 
-    const name       = document.getElementById('f-name').value.trim();
-    const email      = document.getElementById('f-email').value.trim();
-    const color      = document.getElementById('f-color').value.trim();
-    const notes      = document.getElementById('f-notes').value.trim();
-    const partsOther = document.getElementById('f-parts-other').value.trim();
+    const name        = document.getElementById('f-name').value.trim();
+    const color       = document.getElementById('f-color').value.trim();
+    const notes       = document.getElementById('f-notes').value.trim();
+    const partsOther  = document.getElementById('f-parts-other').value.trim();
 
     const styleChecked = [...document.querySelectorAll('#f-style-group input:checked')];
-    const styles = styleChecked.map(el => el.value).join('、');
-    const partsAmount = document.querySelector('input[name="parts-amount"]:checked')?.value || '';
+    const styles       = styleChecked.map(el => el.value).join('、');
+    const partsAmount  = document.querySelector('input[name="parts-amount"]:checked')?.value || '';
     const partsChecked = [...document.querySelectorAll('#f-parts-group input:checked')].map(el => el.value);
     if (partsOther) partsChecked.push(partsOther);
-    const partsText = partsChecked.join('、');
-    const product   = document.querySelector('input[name="product"]:checked')?.value || '';
-    const direction = document.querySelector('input[name="direction"]:checked')?.value || '';
-    const shop = document.querySelector('input[name="shop"]:checked')?.value || '';
+    const partsText  = partsChecked.join('、');
+    const product    = document.querySelector('input[name="product"]:checked')?.value || '';
+    const direction  = document.querySelector('input[name="direction"]:checked')?.value || '';
+    const shop       = document.querySelector('input[name="shop"]:checked')?.value || '';
 
-    const keychainTypes = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
+    const keychainTypes  = ['トレカケース・キーホルダー', 'チェキサイズキーホルダー'];
     const needsDirection = !keychainTypes.includes(product);
 
     // 全項目必須チェック
@@ -138,8 +177,6 @@ function setupForm() {
       submitBtn.disabled = false;
       return;
     }
-
-    // 参考画像は必須
     if (!selectedRefFiles.length) {
       alert('参考画像を選択してください（必須）');
       submitBtn.disabled = false;
@@ -158,21 +195,19 @@ function setupForm() {
         console.error('画像アップロード失敗:', err);
         alert('画像のアップロードに失敗しました。もう一度お試しください。');
         submitBtn.disabled = false;
-        submitBtn.textContent = 'メールで送信する';
+        submitBtn.textContent = 'LINEで依頼する';
         return;
       }
     }
 
-    submitBtn.textContent = 'メールを準備中...';
+    submitBtn.textContent = 'メッセージを作成中...';
 
-    const subject = `【オーダーのご依頼】${name} 様`;
-    const body = [
-      `${name} 様よりオーダーのご依頼がありました。`,
+    // LINEに送るメッセージテキストを組み立て
+    const lineText = [
+      '【オーダーのご依頼】',
       '',
-      '━━━━━━━━━━━━━━━━━',
       `■ お名前：${name}`,
-      `■ メールアドレス：${email}`,
-      '━━━━━━━━━━━━━━━━━',
+      '━━━━━━━━━━━━━',
       `■ ① ホイップの色：${color || '未記入'}`,
       `■ ② デザイン系統：${styles}`,
       `■ ③ パーツの量：${partsAmount}`,
@@ -180,19 +215,34 @@ function setupForm() {
       `■ ⑤ 商品の種類：${product}`,
       needsDirection ? `■ ⑥ 向き：${direction}` : null,
       `■ 購入希望サイト：${shop}`,
-      '━━━━━━━━━━━━━━━━━',
-      '■ その他・備考：',
-      notes || '（なし）',
-      '',
-      imageUrls.length ? imageUrls.map((url, i) => `■ 参考画像${imageUrls.length > 1 ? i + 1 : ''}：${url}`).join('\n') : null,
-      '━━━━━━━━━━━━━━━━━',
-    ].filter(line => line !== null).join('\n');
+      '━━━━━━━━━━━━━',
+      imageUrls.length
+        ? '■ 参考画像：\n' + imageUrls.map((url, i) => `${i + 1}. ${url}`).join('\n')
+        : null,
+      '━━━━━━━━━━━━━',
+      notes ? `■ その他・備考：\n${notes}` : '■ その他・備考：（なし）',
+    ].filter(l => l !== null).join('\n');
 
-    const gmailUrl = `https://mail.google.com/mail/?view=cm&to=${encodeURIComponent(SITE_CONFIG.orderEmail)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.open(gmailUrl, '_blank');
+    // LINE友達追加ボタンのURLを設定
+    const lineId  = SITE_CONFIG.lineOfficialId || '';
+    const isReady = lineId && lineId !== '@your-line-id';
+    const addBtn  = document.getElementById('js-line-add-btn');
+    if (isReady) {
+      addBtn.href = `https://line.me/R/ti/p/${encodeURIComponent(lineId)}`;
+      addBtn.classList.remove('not-ready');
+      addBtn.textContent = '💬 LINEを友達追加してメッセージを送る';
+    } else {
+      addBtn.href = '#';
+      addBtn.classList.add('not-ready');
+      addBtn.textContent = '💬 LINE公式アカウント（準備中）';
+    }
+
+    // モーダルにテキストをセットして表示
+    document.getElementById('js-line-modal-text').textContent = lineText;
+    document.getElementById('js-line-modal').classList.add('open');
 
     submitBtn.disabled = false;
-    submitBtn.textContent = 'メールで送信する';
+    submitBtn.textContent = 'LINEで依頼する';
   });
 }
 

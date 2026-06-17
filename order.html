@@ -404,6 +404,138 @@
       .flow-step { width: 90px; }
       .flow-step:not(:last-child)::after { right: -10px; }
     }
+
+    /* LINEバナー */
+    .line-banner {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: #e8f9ef;
+      border: 1.5px solid #06C755;
+      border-radius: 14px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .line-banner-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .line-banner-title { font-weight: 700; font-size: 0.95rem; color: #00AC44; margin-bottom: 0.2rem; }
+    .line-banner-sub { font-size: 0.78rem; color: #555; line-height: 1.6; }
+    .line-banner-btn {
+      flex-shrink: 0;
+      padding: 0.6rem 1.2rem;
+      background: #06C755;
+      color: #fff;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.15s;
+      white-space: nowrap;
+    }
+    .line-banner-btn:hover { background: #00AC44; }
+    .line-banner-btn.not-ready { background: #ccc; pointer-events: none; }
+
+    /* LINEモーダル */
+    .line-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .line-modal-overlay.open { display: flex; }
+    .line-modal-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 1.75rem;
+      max-width: 480px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .line-modal-title {
+      font-family: 'Noto Serif JP', serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #222;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    .line-modal-steps {
+      display: flex;
+      justify-content: center;
+      gap: 0.3rem;
+      font-size: 0.72rem;
+      color: #666;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .line-modal-text-box {
+      background: #f9f9f9;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      padding: 0.9rem 1rem;
+      font-size: 0.76rem;
+      line-height: 1.9;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-bottom: 0.9rem;
+      color: #333;
+    }
+    .line-copy-btn {
+      width: 100%;
+      padding: 0.72rem;
+      background: #f4f4f4;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      cursor: pointer;
+      margin-bottom: 0.9rem;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .line-copy-btn:hover { background: #e8e8e8; }
+    .line-copy-btn.copied { background: #e8f9ef; border-color: #06C755; color: #00AC44; font-weight: 700; }
+    .line-add-friend-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      width: 100%;
+      padding: 0.85rem;
+      background: #06C755;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      transition: background 0.15s;
+      margin-bottom: 0.45rem;
+    }
+    .line-add-friend-btn:hover { background: #00AC44; }
+    .line-add-friend-btn.not-ready { background: #ccc; pointer-events: none; }
+    .line-modal-note { font-size: 0.72rem; color: #888; text-align: center; margin-bottom: 1.1rem; line-height: 1.6; }
+    .line-modal-close-btn {
+      width: 100%;
+      padding: 0.6rem;
+      background: none;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 0.83rem;
+      color: #888;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    @media (max-width: 640px) {
+      .line-banner { flex-wrap: wrap; }
+      .line-modal-card { padding: 1.25rem; }
+    }
   </style>
 </head>
 <body>
@@ -422,7 +554,7 @@
     <h1 class="order-hero-title">オーダーのご依頼</h1>
     <p class="order-hero-sub">
       あなただけのオリジナル作品をお作りします。<br>
-      フォームに記入して送信すると、メールが開きます。
+      フォームを記入して送信すると、LINE用のメッセージが自動で準備されます。
     </p>
     <div class="order-flow">
       <div class="flow-step">
@@ -431,11 +563,11 @@
       </div>
       <div class="flow-step">
         <div class="flow-num">2</div>
-        <div class="flow-label">るかから<br>返信</div>
+        <div class="flow-label">テキストを<br>コピー</div>
       </div>
       <div class="flow-step">
         <div class="flow-num">3</div>
-        <div class="flow-label">内容を<br>確定</div>
+        <div class="flow-label">LINEで<br>送信</div>
       </div>
       <div class="flow-step">
         <div class="flow-num">4</div>
@@ -507,24 +639,27 @@
         </div>
       </div>
 
+      <!-- LINEバナー -->
+      <div class="line-banner">
+        <div class="line-banner-icon">💬</div>
+        <div style="flex:1; min-width:0;">
+          <p class="line-banner-title">公式LINEでやりとりします</p>
+          <p class="line-banner-sub">フォーム送信後、LINE用のメッセージが自動で作成されます。友達追加してテキストを送ってください。</p>
+        </div>
+        <a href="#" class="line-banner-btn" id="js-line-banner-btn" target="_blank" rel="noopener">友達追加</a>
+      </div>
+
       <!-- フォーム -->
       <div class="order-card">
         <form id="js-order-form">
 
           <p style="font-size:0.78rem; color:var(--rose); margin-bottom:1.5rem; text-align:right; letter-spacing:0.04em;">※ 全ての項目が必須です</p>
 
-          <!-- 連絡先 -->
+          <!-- お名前 -->
           <div class="form-section">
-            <p class="form-section-title">連絡先 <span class="required" style="font-size:0.7rem;">※必須</span></p>
-            <div class="form-row">
-              <div class="form-group">
-                <label class="form-label" for="f-name">お名前<span class="required">※必須</span></label>
-                <input class="form-input" type="text" id="f-name" placeholder="るか" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="f-email">メールアドレス<span class="required">※必須</span></label>
-                <input class="form-input" type="email" id="f-email" placeholder="example@mail.com" required>
-              </div>
+            <p class="form-section-title">お名前 <span class="required" style="font-size:0.7rem;">※必須</span></p>
+            <div class="form-group">
+              <input class="form-input" type="text" id="f-name" placeholder="るか（ニックネームでもOK）" required>
             </div>
           </div>
 
@@ -668,16 +803,16 @@
 
           <!-- その他・備考 -->
           <div class="form-section">
-            <p class="form-section-title">その他・備考 <span class="required" style="font-size:0.7rem;">※必須</span></p>
+            <p class="form-section-title">その他・備考 <span style="font-size:0.7rem; color:var(--text-muted);">任意</span></p>
             <div class="form-group">
-              <textarea class="form-textarea" id="f-notes" required
+              <textarea class="form-textarea" id="f-notes"
                 placeholder="参考にしたい作家様の作品・色の細かい希望・その他ご要望など自由にどうぞ"></textarea>
             </div>
           </div>
 
           <div class="submit-wrap">
-            <button type="submit" class="submit-btn" id="js-submit-btn">メールで送信する</button>
-            <p class="submit-note">ボタンを押すとメールアプリが開きます</p>
+            <button type="submit" class="submit-btn" id="js-submit-btn">LINEで依頼する</button>
+            <p class="submit-note">ボタンを押すとLINE用のメッセージが作成されます</p>
           </div>
 
         </form>
@@ -710,6 +845,30 @@
       <span class="bottom-nav-label">ショップ</span>
     </a>
   </nav>
+
+  <!-- LINEで依頼モーダル -->
+  <div class="line-modal-overlay" id="js-line-modal">
+    <div class="line-modal-card">
+      <p class="line-modal-title">✅ 依頼内容が準備できました！</p>
+      <div class="line-modal-steps">
+        <span>① テキストをコピー</span>
+        <span>→</span>
+        <span>② LINEを友達追加</span>
+        <span>→</span>
+        <span>③ 貼り付けて送信</span>
+      </div>
+      <div class="line-modal-text-box" id="js-line-modal-text"></div>
+      <button class="line-copy-btn" id="js-line-copy-btn">📋 テキストをコピーする</button>
+      <a href="#" class="line-add-friend-btn" id="js-line-add-btn" target="_blank" rel="noopener">
+        💬 LINEを友達追加してメッセージを送る
+      </a>
+      <p class="line-modal-note">
+        友達追加後、コピーしたテキストをトークに貼り付けて送信してください<br>
+        ※参考画像はURLとして本文に含まれています
+      </p>
+      <button class="line-modal-close-btn" id="js-line-modal-close">閉じる（内容を修正する）</button>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js"></script>
