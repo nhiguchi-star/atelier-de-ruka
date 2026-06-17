@@ -631,7 +631,26 @@ footer {
   letter-spacing: 0.02em;
 }
 
-/* === SNSリンク（フッター） === */
+/* === ヒーロー下SNSバー === */
+#hero-sns-bar {
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-card);
+}
+.hero-sns-bar-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+.hero-sns-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+/* === SNSリンク（フッター）=== */
 .sns-links {
   display: flex;
   flex-wrap: wrap;

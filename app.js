@@ -19,6 +19,7 @@ function applyConfig() {
   document.getElementById('js-about-name').textContent = SITE_CONFIG.creatorName;
   renderSnsLinks();
   renderConnectLinks();
+  renderHeroSns();
   document.getElementById('js-hero-title').textContent = SITE_CONFIG.tagline;
   document.getElementById('js-hero-sub').textContent = SITE_CONFIG.subTagline;
 }
@@ -120,6 +121,38 @@ function renderConnectLinks() {
         <span class="connect-btn-sub">${item.sub}</span>
       </a>
     `).join('');
+}
+
+// ヒーロー下SNSバーを描画
+function renderHeroSns() {
+  const container = document.getElementById('js-hero-sns');
+  if (!container) return;
+
+  const items = [
+    { key: 'instagram', label: 'Instagram',    icon: '📸' },
+    { key: 'youtube',   label: 'YouTube',       icon: '▶' },
+    { key: 'mercari',   label: 'Mercari',       icon: '🛍' },
+    { key: 'yahoo',     label: 'Yahoo フリマ', icon: '🏷' },
+  ];
+
+  const lineId = SITE_CONFIG.lineOfficialId;
+  const lineHtml = (lineId && lineId !== '@your-line-id') ? `
+    <a href="https://line.me/R/ti/p/${esc(lineId)}"
+       target="_blank" rel="noopener noreferrer"
+       class="sns-link">
+      <span>💬</span>公式LINE
+    </a>` : '';
+
+  const snsHtml = items
+    .filter(item => SITE_CONFIG.sns && SITE_CONFIG.sns[item.key])
+    .map(item => `
+      <a href="${esc(SITE_CONFIG.sns[item.key])}"
+         target="_blank" rel="noopener noreferrer"
+         class="sns-link">
+        <span>${item.icon}</span>${item.label}
+      </a>`).join('');
+
+  container.innerHTML = lineHtml + snsHtml;
 }
 
 // フッターのSNSリンクを描画
